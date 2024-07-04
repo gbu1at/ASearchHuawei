@@ -14,11 +14,14 @@
     p[finish] = 0
 */
 CH::weight_t
-a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const std::vector<CH::weight_t> &p);
+a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const std::vector<CH::weight_t> &p,
+         double *percent = nullptr);
 
 // a_search с двойным запуском ( из вершин finish и start )
 CH::weight_t
-B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const std::vector<CH::weight_t> &p);
+B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const std::vector<CH::weight_t> &p_s,
+           const std::vector<CH::weight_t> &p_f,
+           double *percent = nullptr);
 
 
 #endif //ASEARCH_ASEARCH_H

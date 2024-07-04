@@ -18,5 +18,9 @@ add_executable(ASearch main.cpp
         ALGO/asearch.cpp
         includes/writing.h
         includes/writing.cpp
-        TEST/a_search_test.h
+        TEST/tests/a_search_test.cpp
+        TEST/efficiency/a_search_efficiency.h
+        TEST/efficiency/a_search_efficiency.cpp
+        TEST/efficiency/test_efficiency.h
+        TEST/efficiency/test_efficiency.cpp
 )

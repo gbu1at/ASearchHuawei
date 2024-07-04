@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <vector>
+#include <string>
 
 namespace CH {
     struct Edge;
@@ -38,7 +39,8 @@ namespace CH {
         // n - cnt vertex
         // m - cnt edges
 
-        size_t n{}, m{};
+        size_t n;
+        size_t m;
 
         Graph();
 
@@ -48,14 +50,25 @@ namespace CH {
 
         // O(deg(a));
         bool has_edge(vertex_t a, vertex_t b);
+
+        void erase_edge(vertex_t a, vertex_t b);
     };
 
     struct GridGraph : Graph {
         GridGraph(size_t rows, size_t cols);
         GridGraph();
         size_t rows, cols;
+        bool is_deleted_vertex(int row, int col);
+        int get_id(int row, int col) const;
     };
 
+    struct AlgorithmEfficiency {
+        double percent;
+        double time;
+        weight_t result;
+        std::string name_algorithm;
+        void print() const;
+    };
 };
 
 #endif //ASEARCH_STRUCTURES_H

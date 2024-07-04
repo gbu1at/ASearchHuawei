@@ -1,13 +1,16 @@
 #include <iostream>
-#include "TEST/a_search_test.h"
-#include "includes/writing.h"
-#include "generate/generate_graphs.h"
+#include "TEST/efficiency/test_efficiency.h"
 
 int main() {
 
-//    test_simple_dijkstra();
-    CH::GridGraph graph = generate_random_grid_graph(5, 6, 10, 4);
-    writing_grid_graph(graph, std::cout);
+    std::cout << "OK\n";
+
+    for (int test = 0; test < 1; ++test) {
+        std::cout << test << "\n";
+        test_manhattan_graph_efficiency(test);
+    }
+//    test_manhattan_graph_efficiency();
+
 
     return 0;
 }

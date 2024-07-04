@@ -81,12 +81,13 @@ CH::GridGraph generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_bl
     vertices.resize(cnt_block);
 
     for (auto vertex : vertices) {
-        graph.vertices[vertex].adj.clear();
-        for (auto& v : graph.vertices) {
-            v.adj.erase(std::remove_if(v.adj.begin(), v.adj.end(), [vertex](const CH::Edge& edge) {
+        for (auto&  edge : graph.vertices[vertex].adj) {
+            auto u = edge.to;
+            graph.vertices[u].adj.erase(std::remove_if(graph.vertices[u].adj.begin(), graph.vertices[u].adj.end(), [vertex](const CH::Edge& edge) {
                 return edge.to == vertex;
-            }), v.adj.end());
+            }), graph.vertices[u].adj.end());
         }
+        graph.vertices[vertex].adj.clear();
     }
 
     return graph;

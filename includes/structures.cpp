@@ -4,6 +4,8 @@
 
 #include "structures.h"
 #include "types.h"
+#include <fstream>
+#include <iostream>
 
 CH::Edge::Edge(CH::vertex_t t, CH::vertex_t f, CH::weight_t w, size_t i) {
     this->to = t;
@@ -32,6 +34,10 @@ bool CH::Graph::has_edge(CH::vertex_t a, CH::vertex_t b) {
     return false;
 }
 
+void CH::Graph::erase_edge(CH::vertex_t a, CH::vertex_t b) {
+
+}
+
 CH::GridGraph::GridGraph(size_t rows, size_t cols) : Graph(rows * cols) {
     this->rows = rows;
     this->cols = cols;
@@ -40,4 +46,22 @@ CH::GridGraph::GridGraph(size_t rows, size_t cols) : Graph(rows * cols) {
 CH::GridGraph::GridGraph() : Graph() {
     this->rows = 0;
     this->cols = 0;
+}
+
+bool CH::GridGraph::is_deleted_vertex(int row, int col) {
+    int v = this->get_id(row, col);
+    return vertices[v].degree() == 0;
+}
+
+int CH::GridGraph::get_id(int row, int col) const {
+    return row * this->cols + col;
+}
+void CH::AlgorithmEfficiency::print() const
+{
+    std::cout << "\n"
+              << "algorithm: " << name_algorithm << "\n"
+              << "time: " << time << "\n"
+              << "percent: " << percent << "\n"
+              << "result: " << result << "\n"
+              << "\n";
 }

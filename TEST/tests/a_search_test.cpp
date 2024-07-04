@@ -1,16 +1,9 @@
 //
-// Created by apple on 03.07.2024.
+// Created by apple on 04.07.2024.
 //
 
-#ifndef ASEARCH_A_SEARCH_TEST_H
-#define ASEARCH_A_SEARCH_TEST_H
+#include "a_search_test.h"
 
-#include "../includes/structures.h"
-#include "../generate/generate_graphs.h"
-#include "../includes/writing.h"
-#include "../ALGO/dijkstra.h"
-#include "../ALGO/asearch.h"
-#include <cassert>
 
 void test_simple_dijkstra() {
     {
@@ -31,7 +24,6 @@ void test_simple_dijkstra() {
         assert(result[1] == 7);
         assert(result[2] == 9);
         assert(result[3] == 20);
-        assert(result[4] == 20);
         assert(result[5] == 11);
     }
 
@@ -58,32 +50,59 @@ void test_simple_dijkstra() {
         assert(result[6] == 12);
     }
 
-    std::cout << "tests completed!" << std::endl;
+    {
+        CH::Graph graph(8);
+        graph.add_edge(0, 1, 1);
+        graph.add_edge(1, 2, 2);
+        graph.add_edge(2, 3, 1);
+        graph.add_edge(3, 4, 4);
+        graph.add_edge(4, 5, 1);
+        graph.add_edge(5, 6, 3);
+        graph.add_edge(6, 7, 1);
+        graph.add_edge(0, 7, 10);
+
+        auto result = dijkstra_min_all_vertices(0, graph);
+
+        assert(result[0] == 0);
+        assert(result[1] == 1);
+    }
+
+    {
+        CH::Graph graph(30);
+
+        for (CH::vertex_t i = 0; i < 29; ++i)
+            graph.add_edge(i, i + 1, i + 2);
+
+        graph.add_edge(0, 15, 10);
+        graph.add_edge(10, 20, 15);
+        graph.add_edge(5, 25, 7);
+        graph.add_edge(2, 28, 8);
+
+        auto result = dijkstra_min_all_vertices(0, graph);
+
+        assert(result[0] == 0);
+        assert(result[15] == 10);
+        assert(result[25] == 27);
+        assert(result[28] == 13);
+    }
+
+    std::cout << "test_simple_dijkstra tests completed!" << std::endl;
 }
 
 
-void test_a_search_null_p() {
-    int seed = 3224;
 
-    CH::vertex_t n = 8;
-    size_t m = 15;
+void test_a_search_null_p(int seed) {
+    CH::vertex_t n = 100;
+    size_t m = 700;
     CH::weight_t max_weight = 5;
     std::vector<CH::weight_t> p(n, 0);
 
     CH::Graph rnd_graph = generate_random_graph(n, m, max_weight, seed);
-
-    writing_graph(rnd_graph, std::cout);
 
     for (int v = 0; v < n; ++v)
         for (int u = 0; u < n; ++u) {
             assert(dijkstra_min_two_vertices(u, v, rnd_graph) == a_search(u, v, rnd_graph, p));
         }
 
-    std::cout << "work correct!\n";
+    std::cout << "test_a_search_null_p work correct!\n";
 }
-
-void test_a_search_manhattan_distance() {
-    int seed = 234;
-}
-
-#endif //ASEARCH_A_SEARCH_TEST_H

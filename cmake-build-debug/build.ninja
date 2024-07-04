@@ -97,6 +97,24 @@ build CMakeFiles/ASearch.dir/includes/writing.cpp.o: CXX_COMPILER__ASearch_unsca
   OBJECT_DIR = CMakeFiles/ASearch.dir
   OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/includes
 
+build CMakeFiles/ASearch.dir/TEST/tests/a_search_test.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/TEST/tests/a_search_test.cpp || cmake_object_order_depends_target_ASearch
+  DEP_FILE = CMakeFiles/ASearch.dir/TEST/tests/a_search_test.cpp.o.d
+  FLAGS = -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ASearch.dir
+  OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/TEST/tests
+
+build CMakeFiles/ASearch.dir/TEST/efficiency/a_search_efficiency.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/TEST/efficiency/a_search_efficiency.cpp || cmake_object_order_depends_target_ASearch
+  DEP_FILE = CMakeFiles/ASearch.dir/TEST/efficiency/a_search_efficiency.cpp.o.d
+  FLAGS = -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ASearch.dir
+  OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/TEST/efficiency
+
+build CMakeFiles/ASearch.dir/TEST/efficiency/test_efficiency.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/TEST/efficiency/test_efficiency.cpp || cmake_object_order_depends_target_ASearch
+  DEP_FILE = CMakeFiles/ASearch.dir/TEST/efficiency/test_efficiency.cpp.o.d
+  FLAGS = -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ASearch.dir
+  OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/TEST/efficiency
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ASearch
@@ -105,7 +123,7 @@ build CMakeFiles/ASearch.dir/includes/writing.cpp.o: CXX_COMPILER__ASearch_unsca
 #############################################
 # Link the executable ASearch
 
-build ASearch: CXX_EXECUTABLE_LINKER__ASearch_Debug CMakeFiles/ASearch.dir/main.cpp.o CMakeFiles/ASearch.dir/includes/structures.cpp.o CMakeFiles/ASearch.dir/includes/reading.cpp.o CMakeFiles/ASearch.dir/generate/generate_graphs.cpp.o CMakeFiles/ASearch.dir/a_search.cpp.o CMakeFiles/ASearch.dir/ALGO/dijkstra.cpp.o CMakeFiles/ASearch.dir/ALGO/asearch.cpp.o CMakeFiles/ASearch.dir/includes/writing.cpp.o
+build ASearch: CXX_EXECUTABLE_LINKER__ASearch_Debug CMakeFiles/ASearch.dir/main.cpp.o CMakeFiles/ASearch.dir/includes/structures.cpp.o CMakeFiles/ASearch.dir/includes/reading.cpp.o CMakeFiles/ASearch.dir/generate/generate_graphs.cpp.o CMakeFiles/ASearch.dir/a_search.cpp.o CMakeFiles/ASearch.dir/ALGO/dijkstra.cpp.o CMakeFiles/ASearch.dir/ALGO/asearch.cpp.o CMakeFiles/ASearch.dir/includes/writing.cpp.o CMakeFiles/ASearch.dir/TEST/tests/a_search_test.cpp.o CMakeFiles/ASearch.dir/TEST/efficiency/a_search_efficiency.cpp.o CMakeFiles/ASearch.dir/TEST/efficiency/test_efficiency.cpp.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6
   OBJECT_DIR = CMakeFiles/ASearch.dir
   POST_BUILD = :
