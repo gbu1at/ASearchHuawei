@@ -41,7 +41,7 @@ CH::GridGraph generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_bl
     std::vector<int> vertices(rows * cols);
     std::iota(vertices.begin(), vertices.end(), 0);
 
-    std::mt19937 rng(seed);
+    std::mt19937 rnd(seed);
 
     auto get_id = [cols](int row, int col) {
         return row * cols + col;
@@ -77,7 +77,7 @@ CH::GridGraph generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_bl
         }
     }
 
-    std::shuffle(vertices.begin(), vertices.end(), rng);
+    std::shuffle(vertices.begin(), vertices.end(), rnd);
     vertices.resize(cnt_block);
 
     for (auto vertex : vertices) {

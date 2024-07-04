@@ -23,4 +23,6 @@ add_executable(ASearch main.cpp
         TEST/efficiency/a_search_efficiency.cpp
         TEST/efficiency/test_efficiency.h
         TEST/efficiency/test_efficiency.cpp
+        LANDMARKS/landmarks.h
+        LANDMARKS/landmarks.cpp
 )
