@@ -10,11 +10,15 @@
 #include <cstdio>
 #include <vector>
 #include <string>
+#include <random>
+#include "../random_until.h"
 
 namespace CH {
     struct Edge;
     struct Vertex;
     struct Graph;
+
+    void set_seed(int new_seed);
 
     struct Edge {
         vertex_t to;
@@ -52,6 +56,10 @@ namespace CH {
         bool has_edge(vertex_t a, vertex_t b);
 
         void erase_edge(vertex_t a, vertex_t b);
+
+        void delete_vertex(vertex_t v);
+
+        void print();
     };
 
     struct GridGraph : Graph {
@@ -64,9 +72,12 @@ namespace CH {
 
     struct AlgorithmEfficiency {
         double percent;
+        int cnt_move;
+        int cnt_edge_in_way;
         double time;
         weight_t result;
         std::string name_algorithm;
+        std::string comment;
         void print() const;
     };
 };

@@ -5,22 +5,21 @@
 #include "generate_graphs.h"
 #include <random>
 #include <set>
-#include <ctime>
 #include <cassert>
 
 CH::Graph generate_random_graph(CH::vertex_t n_vertices, size_t m_edges,
-                                CH::weight_t max_weight = std::numeric_limits<CH::weight_t>::max(), long seed) {
+                                CH::weight_t max_weight) {
     assert(m_edges <= n_vertices * (n_vertices - 1) / 2);
-    if (seed == -1) seed = time(nullptr);
-    std::mt19937 rnd(seed);
+    ;
 
     std::set<std::pair<CH::vertex_t, CH::vertex_t>> edges;
 
     CH::Graph graph(n_vertices);
     for (size_t _ = 0; _ < m_edges; ++_) {
         do {
-            CH::vertex_t a = rnd() % n_vertices, b = rnd() % n_vertices;
-            CH::weight_t w = rnd() % max_weight + 1;
+            CH::vertex_t a = RandomUtil::PROJECT_RND() % n_vertices;
+            CH::vertex_t b = RandomUtil::PROJECT_RND() % n_vertices;
+            CH::weight_t w = RandomUtil::PROJECT_RND() % max_weight + 1;
             if (a > b) std::swap(a, b);
 
             if (a == b) continue;
@@ -35,13 +34,13 @@ CH::Graph generate_random_graph(CH::vertex_t n_vertices, size_t m_edges,
     return graph;
 }
 
-CH::GridGraph generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_block, long seed) {
+CH::GridGraph generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_block) {
     CH::GridGraph graph(rows, cols);
 
     std::vector<int> vertices(rows * cols);
     std::iota(vertices.begin(), vertices.end(), 0);
 
-    std::mt19937 rnd(seed);
+    ;
 
     auto get_id = [cols](int row, int col) {
         return row * cols + col;
@@ -77,27 +76,20 @@ CH::GridGraph generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_bl
         }
     }
 
-    std::shuffle(vertices.begin(), vertices.end(), rnd);
+    RandomUtil::shuffle(vertices.begin(), vertices.end());
     vertices.resize(cnt_block);
 
-    for (auto vertex : vertices) {
-        for (auto&  edge : graph.vertices[vertex].adj) {
-            auto u = edge.to;
-            graph.vertices[u].adj.erase(std::remove_if(graph.vertices[u].adj.begin(), graph.vertices[u].adj.end(), [vertex](const CH::Edge& edge) {
-                return edge.to == vertex;
-            }), graph.vertices[u].adj.end());
-        }
-        graph.vertices[vertex].adj.clear();
-    }
+    for (auto vertex : vertices)
+        graph.delete_vertex(vertex);
 
     return graph;
 }
 
-void generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_block, std::ofstream &out, long seed) {
+void generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_block, std::ofstream &out) {
 
 }
 
 void
-generate_random_graph(CH::vertex_t n_vertices, size_t m_edges, CH::weight_t max_weight, std::ofstream &out, long seed) {
+generate_random_graph(CH::vertex_t n_vertices, size_t m_edges, CH::weight_t max_weight, std::ofstream &out) {
 
 }

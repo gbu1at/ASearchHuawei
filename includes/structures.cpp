@@ -4,8 +4,12 @@
 
 #include "structures.h"
 #include "types.h"
-#include <fstream>
 #include <iostream>
+
+//void CH::set_seed(int new_seed) {
+//    CH::SEED = new_seed;
+//    RandomUtil::PROJECT_RND.seed(new_seed);
+//}
 
 CH::Edge::Edge(CH::vertex_t t, CH::vertex_t f, CH::weight_t w, size_t i) {
     this->to = t;
@@ -38,9 +42,64 @@ void CH::Graph::erase_edge(CH::vertex_t a, CH::vertex_t b) {
 
 }
 
+void CH::Graph::print() {
+    std::cout << n << " " << m << "\n";
+    for (int v = 0; v < n; ++v) {
+        std::cout << v << ": ";
+        for (auto edge : vertices[v].adj) {
+            std::cout << edge.to << " " << edge.weight << " ;\t";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
+void CH::Graph::delete_vertex(CH::vertex_t vertex) {
+    for (auto&  edge : vertices[vertex].adj) {
+        auto u = edge.to;
+        vertices[u].adj.erase(std::remove_if(vertices[u].adj.begin(), vertices[u].adj.end(), [vertex](const CH::Edge& edge) {
+            return edge.to == vertex;
+        }), vertices[u].adj.end());
+    }
+    vertices[vertex].adj.clear();
+}
+
 CH::GridGraph::GridGraph(size_t rows, size_t cols) : Graph(rows * cols) {
     this->rows = rows;
     this->cols = cols;
+    auto get_id = [cols](int row, int col) {
+        return row * cols + col;
+    };
+
+    for (int r = 0; r < rows; ++r) {
+        for (int c = 0; c < cols; ++c) {
+            int cur_id = get_id(r, c);
+            if (r > 0) {
+                int up_id = get_id(r - 1, c);
+                if (!has_edge(cur_id, up_id)) {
+                    add_edge(cur_id, up_id, 1);
+                }
+            }
+            if (c > 0) {
+                int left_id = get_id(r, c - 1);
+                if (!has_edge(cur_id, left_id)) {
+                    add_edge(cur_id, left_id, 1);
+                }
+            }
+            if (r < rows - 1) {
+                int down_id = get_id(r + 1, c);
+                if (!has_edge(cur_id, down_id)) {
+                    add_edge(cur_id, down_id, 1);
+                }
+            }
+            if (c < cols - 1) {
+                int right_id = get_id(r, c + 1);
+                if (!has_edge(cur_id, right_id)) {
+                    add_edge(cur_id, right_id, 1);
+                }
+            }
+        }
+    }
 }
 
 CH::GridGraph::GridGraph() : Graph() {
@@ -63,5 +122,8 @@ void CH::AlgorithmEfficiency::print() const
               << "time: " << time << "\n"
               << "percent: " << percent << "\n"
               << "result: " << result << "\n"
+              << "cnt move: " << cnt_move << "\n"
+              << "cnt edge in way: " << cnt_edge_in_way << "\n"
+              << "comment: '''" << comment << "''''" << "\n"
               << "\n";
 }

@@ -5,13 +5,18 @@
 #include "asearch.h"
 #include <set>
 #include <vector>
+#include <iostream>
+#include <functional>
 
 CH::weight_t
-a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const std::vector<CH::weight_t> &p,
-         double *percent) {
+a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std::function<CH::weight_t(CH::vertex_t)> p,
+         double *percent, std::vector<bool> *mark_, int *cnt_move_, int *cnt_edge_in_way_) {
     std::vector<CH::weight_t> distances(graph.n, std::numeric_limits<CH::weight_t>::max());
     std::vector<CH::weight_t> k(graph.n, std::numeric_limits<CH::weight_t>::max());
-    k[start] = p[start];
+
+    std::vector<bool> mark(graph.n);
+
+    k[start] = p(start);
 
     distances[start] = 0;
 
@@ -37,6 +42,12 @@ a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const 
 
         CH::vertex_t current_node = active_vertices.begin()->second;
 
+
+//        std::cout << current_node << "\n";
+
+
+        mark[current_node] = true;
+
         if (current_node == finish) {
             result = distances[finish];
             break;
@@ -47,7 +58,7 @@ a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const 
         for (const CH::Edge &edge: graph.vertices[current_node].adj) {
             distances[edge.to] = std::min(distances[edge.to], distances[current_node] + edge.weight);
 
-            CH::weight_t new_k_distance = distances[current_node] + edge.weight + p[edge.to];
+            CH::weight_t new_k_distance = distances[current_node] + edge.weight + p(edge.to);
 
             if (new_k_distance < k[edge.to]) {
                 active_vertices.erase({k[edge.to], edge.to});
@@ -62,37 +73,49 @@ a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const 
         }
     }
 
+    int cnt_edge_in_way = 0;
+    if (result != std::numeric_limits<CH::weight_t>::max()) {
+        CH::vertex_t curr = finish;
+        while (curr != start) {
+            cnt_edge_in_way++;
+            curr = min_way[curr];
+        }
+    }
     if (percent != nullptr) {
         if (result == std::numeric_limits<CH::weight_t>::max()) *percent = 0;
         else {
-            int len_way = 0;
-            CH::vertex_t curr = finish;
-            while (curr != start) {
-                len_way++;
-                curr = min_way[curr];
-            }
-            *percent = 100 * len_way / (double) count_viewed_vertex;
+
+            *percent = 100 * cnt_edge_in_way / (double) count_viewed_vertex;
         }
     }
 
+    if (mark_ != nullptr)
+        *mark_ = mark;
+
+    if (cnt_move_ != nullptr)
+        *cnt_move_ = count_viewed_vertex;
+
+    if (cnt_edge_in_way_ != nullptr)
+        *cnt_edge_in_way_ = cnt_edge_in_way;
 
     return result;
 }
 
 CH::weight_t
-B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, const std::vector<CH::weight_t> &p_s,
-           const std::vector<CH::weight_t> &p_f,
-           double *percent) {
+B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std::function<CH::weight_t(CH::vertex_t)> p_s,
+           std::function<CH::weight_t(CH::vertex_t)> p_f,
+           double *percent, std::vector<bool> *mark_, int *cnt_move_, int *cnt_edge_in_way_) {
+
     std::vector<CH::weight_t> distances_start(graph.n, std::numeric_limits<CH::weight_t>::max());
     std::vector<CH::weight_t> k_s(graph.n, std::numeric_limits<CH::weight_t>::max());
-    k_s[start] = p_s[start];
+    k_s[start] = p_s(start);
     distances_start[start] = 0;
     std::vector<bool> mark_from_start(graph.n, false);
     mark_from_start[start] = true;
 
     std::vector<CH::weight_t> distances_finish(graph.n, std::numeric_limits<CH::weight_t>::max());
     std::vector<CH::weight_t> k_f(graph.n, std::numeric_limits<CH::weight_t>::max());
-    k_f[finish] = p_f[finish];
+    k_f[finish] = p_f(finish);
     distances_finish[finish] = 0;
     std::vector<bool> mark_from_finish(graph.n, false);
     mark_from_finish[finish] = true;
@@ -114,51 +137,55 @@ B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, cons
     CH::weight_t result = std::numeric_limits<CH::weight_t>::max();
     CH::vertex_t middle_vertex;
 
+    std::vector<bool> mark(graph.n);
 
     while (!active_vertices_start.empty() && !active_vertices_finish.empty()) {
         std::set<std::pair<CH::weight_t, CH::vertex_t>> *active_vertices = nullptr;
         std::vector<CH::weight_t> *k = nullptr;
-        const std::vector<CH::weight_t> *p = nullptr;
-        std::vector<CH::weight_t> *distances = nullptr;
+        std::function<CH::weight_t(CH::vertex_t)>* p = nullptr;
+        std::vector<CH::weight_t> *distances_from_ = nullptr;
+        std::vector<CH::weight_t> *distances_to_ = nullptr;
         std::vector<bool> *mark_from_ = nullptr;
+        std::vector<bool> *mark_to_ = nullptr;
         std::vector<size_t>* min_way_ = nullptr;
-
-        count_viewed_vertex++;
-
 
         if (selector == 0) {
             active_vertices = &active_vertices_start;
-            distances = &distances_start;
+            distances_from_ = &distances_start;
+            distances_to_ = &distances_finish;
             mark_from_ = &mark_from_start;
+            mark_to_ = &mark_from_finish;
             k = &k_s;
             p = &p_s;
             min_way_ = &min_way_s;
         } else {
             active_vertices = &active_vertices_finish;
-            distances = &distances_finish;
+            distances_from_ = &distances_finish;
+            distances_to_ = &distances_start;
             mark_from_ = &mark_from_finish;
+            mark_to_ = &mark_from_start;
             k = &k_f;
             p = &p_f;
             min_way_ = &min_way_f;
         }
-
+        selector = (selector + 1) % 2;
 
         CH::weight_t current_distance = active_vertices->begin()->first;
         CH::vertex_t current_node = active_vertices->begin()->second;
         active_vertices->erase(active_vertices->begin());
         (*mark_from_)[current_node] = true;
 
-        if (mark_from_finish[current_node] && mark_from_start[current_node]) {
-            result = std::min(result, distances_start[current_node] + distances_finish[current_node]);
-            middle_vertex = current_node;
-        }
 
-        if (current_distance > result) continue;
+        mark[current_node] = true;
+
+        if ((*mark_to_)[current_node]) continue;
+
+        count_viewed_vertex++;
 
         for (const CH::Edge &edge: graph.vertices[current_node].adj) {
-            CH::weight_t new_distance = (*distances)[current_node] + edge.weight + (*p)[edge.to];
+            CH::weight_t new_distance = (*distances_from_)[current_node] + edge.weight + (*p)(edge.to);
 
-            (*distances)[edge.to] = std::min((*distances)[edge.to], (*distances)[current_node] + edge.weight);
+            (*distances_from_)[edge.to] = std::min((*distances_from_)[edge.to], (*distances_from_)[current_node] + edge.weight);
 
             if (new_distance < (*k)[edge.to]) {
                 active_vertices->erase({(*k)[edge.to], edge.to});
@@ -167,31 +194,44 @@ B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, cons
 
                 (*min_way_)[edge.to] = current_node;
             }
+            if ((*mark_to_)[edge.to] && result > (*distances_from_)[current_node] + edge.weight + (*distances_to_)[edge.to]) {
+                result = (*distances_from_)[current_node] + edge.weight + (*distances_to_)[edge.to];
+                middle_vertex = edge.to;
+            }
         }
 
+        if (current_distance >= result)
+            break;
+    }
 
-        selector = (selector + 1) % 2;
+    int cnt_edge_in_way = 0;
+    if (result != std::numeric_limits<CH::weight_t>::max()) {
+        CH::vertex_t curr = middle_vertex;
+        while (curr != start) {
+            cnt_edge_in_way++;
+            curr = min_way_s[curr];
+        }
+
+        curr = middle_vertex;
+        while (curr != finish) {
+            cnt_edge_in_way++;
+            curr = min_way_f[curr];
+        }
     }
 
     if (percent != nullptr) {
         if (result == std::numeric_limits<CH::weight_t>::max()) *percent = 0;
-        else {
-            int len_way = 0;
-            CH::vertex_t curr = middle_vertex;
-            while (curr != start) {
-                len_way++;
-                curr = min_way_s[curr];
-            }
-
-            curr = middle_vertex;
-            while (curr != finish) {
-                len_way++;
-                curr = min_way_f[curr];
-            }
-            *percent = 100 * len_way / (double) count_viewed_vertex;
-        }
+        else *percent = 100 * cnt_edge_in_way / (double) count_viewed_vertex;
     }
 
+    if (mark_ != nullptr)
+        *mark_ = mark;
+
+    if (cnt_move_ != nullptr)
+        *cnt_move_ = count_viewed_vertex;
+
+    if (cnt_edge_in_way_ != nullptr)
+        *cnt_edge_in_way_ = cnt_edge_in_way;
 
     return result;
 }

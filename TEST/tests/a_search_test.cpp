@@ -90,18 +90,24 @@ void test_simple_dijkstra() {
 }
 
 
+void test_a_search_null_p() {
 
-void test_a_search_null_p(int seed) {
     CH::vertex_t n = 100;
     size_t m = 700;
     CH::weight_t max_weight = 5;
     std::vector<CH::weight_t> p(n, 0);
 
-    CH::Graph rnd_graph = generate_random_graph(n, m, max_weight, seed);
+    CH::Graph rnd_graph = generate_random_graph(n, m, max_weight);
+
+
+    std::function<CH::weight_t(CH::vertex_t)> dist_func_p = [&p](CH::vertex_t id) {
+        return p[id];
+    };
 
     for (int v = 0; v < n; ++v)
         for (int u = 0; u < n; ++u) {
-            assert(dijkstra_min_two_vertices(u, v, rnd_graph) == a_search(u, v, rnd_graph, p));
+            assert(dijkstra_min_two_vertices(u, v, rnd_graph) == a_search(u, v, rnd_graph,
+                                                                          dist_func_p));
         }
 
     std::cout << "test_a_search_null_p work correct!\n";

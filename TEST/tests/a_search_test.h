@@ -21,7 +21,7 @@
 
 void test_simple_dijkstra();
 
-void test_a_search_null_p(int seed = 8357);
+void test_a_search_null_p();
 
 #endif //ASEARCH_A_SEARCH_TEST_H
 
