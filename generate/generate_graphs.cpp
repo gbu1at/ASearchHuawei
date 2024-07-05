@@ -17,9 +17,9 @@ CH::Graph generate_random_graph(CH::vertex_t n_vertices, size_t m_edges,
     CH::Graph graph(n_vertices);
     for (size_t _ = 0; _ < m_edges; ++_) {
         do {
-            CH::vertex_t a = RandomUtil::PROJECT_RND() % n_vertices;
-            CH::vertex_t b = RandomUtil::PROJECT_RND() % n_vertices;
-            CH::weight_t w = RandomUtil::PROJECT_RND() % max_weight + 1;
+            CH::vertex_t a = Setting::PROJECT_RND() % n_vertices;
+            CH::vertex_t b = Setting::PROJECT_RND() % n_vertices;
+            CH::weight_t w = Setting::PROJECT_RND() % max_weight + 1;
             if (a > b) std::swap(a, b);
 
             if (a == b) continue;
@@ -76,7 +76,7 @@ CH::GridGraph generate_random_grid_graph(size_t rows, size_t cols, size_t cnt_bl
         }
     }
 
-    RandomUtil::shuffle(vertices.begin(), vertices.end());
+    Setting::shuffle(vertices.begin(), vertices.end());
     vertices.resize(cnt_block);
 
     for (auto vertex : vertices)

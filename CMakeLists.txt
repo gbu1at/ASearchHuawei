@@ -25,6 +25,11 @@ add_executable(ASearch main.cpp
         TEST/efficiency/test_efficiency.cpp
         LANDMARKS/landmarks.h
         LANDMARKS/landmarks.cpp
-        random_until.h
-        random_until.cpp
+        setting.h
+        setting.cpp
+        TEST/efficiency/dijkstra_efficiency.h
+        TEST/efficiency/dijkstra_efficiency.cpp
+        LANDMARKS/test_efficiency_landmarks.h
+        LANDMARKS/test_efficiency_landmarks.cpp
+        TEST/tests/testin_all_algorithm.cpp
 )

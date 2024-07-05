@@ -6,7 +6,8 @@
 #include <set>
 #include <vector>
 #include <iostream>
-#include <functional>
+#include <cassert>
+#include "dijkstra.h"
 
 CH::weight_t
 a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std::function<CH::weight_t(CH::vertex_t)> p,
@@ -97,6 +98,9 @@ a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std::f
 
     if (cnt_edge_in_way_ != nullptr)
         *cnt_edge_in_way_ = cnt_edge_in_way;
+
+    if (Setting::is_debug())
+        assert(result == dijkstra_min_two_vertices(start, finish, graph));
 
     return result;
 }
@@ -232,6 +236,9 @@ B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std:
 
     if (cnt_edge_in_way_ != nullptr)
         *cnt_edge_in_way_ = cnt_edge_in_way;
+
+    if (Setting::is_debug())
+        assert(result == dijkstra_min_two_vertices(start, finish, graph));
 
     return result;
 }

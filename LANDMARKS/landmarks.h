@@ -11,7 +11,7 @@
 
 namespace CH {
     struct LandMarks {
-        size_t cnt;
+        size_t cnt_landmarks;
         int finish = 0;
         std::vector<vertex_t> landmarks;
         std::vector<std::vector<weight_t>> min_dist_for_landmarks;
@@ -21,19 +21,19 @@ namespace CH {
 
         LandMarks(const Graph &graph, const std::vector<vertex_t> &new_land_marks) {
             this->landmarks = new_land_marks;
-            this->cnt = new_land_marks.size();
+            this->cnt_landmarks = new_land_marks.size();
             this->build_min_ways(graph);
         }
 
-        void random_landmarks(size_t cnt, const Graph &graph);
+        void random_landmarks(size_t cnt_landmarks, const Graph &graph);
 
-        void smart_landmarks(size_t cnt, const Graph &graph);
+        void smart_landmarks(size_t cnt_landmarks, const Graph &graph);
 
         void set_finish(vertex_t finish);
 
-        void smart_landmark1(size_t cnt, const Graph &graph);
+        void smart_landmark1(size_t cnt_landmarks, const Graph &graph);
 
-        void smart_landmarks2(size_t cnt, const GridGraph &graph);
+        void smart_landmarks2(size_t cnt_landmarks, const GridGraph &graph);
 
         void build_min_ways(const CH::Graph &graph);
 

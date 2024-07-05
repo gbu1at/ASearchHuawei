@@ -8,7 +8,7 @@
 
 //void CH::set_seed(int new_seed) {
 //    CH::SEED = new_seed;
-//    RandomUtil::PROJECT_RND.seed(new_seed);
+//    Setting::PROJECT_RND.seed(new_seed);
 //}
 
 CH::Edge::Edge(CH::vertex_t t, CH::vertex_t f, CH::weight_t w, size_t i) {

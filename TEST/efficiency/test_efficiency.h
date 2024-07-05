@@ -9,9 +9,7 @@
 #include "a_search_efficiency.h"
 
 
-void test_manhattan_graph_efficiency();
-
-void test_random_graph_efficiency(int cnt_landmarks = 1);
+void test_manhattan_graph_efficiency(int tests = 1);
 
 
 #endif //ASEARCH_TEST_EFFICIENCY_H

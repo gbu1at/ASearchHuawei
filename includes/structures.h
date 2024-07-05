@@ -11,7 +11,7 @@
 #include <vector>
 #include <string>
 #include <random>
-#include "../random_until.h"
+#include "../setting.h"
 
 namespace CH {
     struct Edge;
@@ -80,6 +80,12 @@ namespace CH {
         std::string comment;
         void print() const;
     };
+
+//    struct ASearchAlgorithmEfficiency : AlgorithmEfficiency {
+//        AlgorithmEfficiency() : AlgorithmEfficiency() {
+//            name_algorithm = "":
+//        }
+//    };
 };
 
 #endif //ASEARCH_STRUCTURES_H

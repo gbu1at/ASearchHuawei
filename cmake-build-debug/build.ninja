@@ -121,11 +121,29 @@ build CMakeFiles/ASearch.dir/LANDMARKS/landmarks.cpp.o: CXX_COMPILER__ASearch_un
   OBJECT_DIR = CMakeFiles/ASearch.dir
   OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/LANDMARKS
 
-build CMakeFiles/ASearch.dir/random_until.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/random_until.cpp || cmake_object_order_depends_target_ASearch
-  DEP_FILE = CMakeFiles/ASearch.dir/random_until.cpp.o.d
+build CMakeFiles/ASearch.dir/setting.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/setting.cpp || cmake_object_order_depends_target_ASearch
+  DEP_FILE = CMakeFiles/ASearch.dir/setting.cpp.o.d
   FLAGS = -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics
   OBJECT_DIR = CMakeFiles/ASearch.dir
   OBJECT_FILE_DIR = CMakeFiles/ASearch.dir
+
+build CMakeFiles/ASearch.dir/TEST/efficiency/dijkstra_efficiency.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/TEST/efficiency/dijkstra_efficiency.cpp || cmake_object_order_depends_target_ASearch
+  DEP_FILE = CMakeFiles/ASearch.dir/TEST/efficiency/dijkstra_efficiency.cpp.o.d
+  FLAGS = -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ASearch.dir
+  OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/TEST/efficiency
+
+build CMakeFiles/ASearch.dir/LANDMARKS/test_efficiency_landmarks.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/LANDMARKS/test_efficiency_landmarks.cpp || cmake_object_order_depends_target_ASearch
+  DEP_FILE = CMakeFiles/ASearch.dir/LANDMARKS/test_efficiency_landmarks.cpp.o.d
+  FLAGS = -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ASearch.dir
+  OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/LANDMARKS
+
+build CMakeFiles/ASearch.dir/TEST/tests/testin_all_algorithm.cpp.o: CXX_COMPILER__ASearch_unscanned_Debug /Users/apple/Desktop/HUAWEI_PROJECT/ASearch/TEST/tests/testin_all_algorithm.cpp || cmake_object_order_depends_target_ASearch
+  DEP_FILE = CMakeFiles/ASearch.dir/TEST/tests/testin_all_algorithm.cpp.o.d
+  FLAGS = -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ASearch.dir
+  OBJECT_FILE_DIR = CMakeFiles/ASearch.dir/TEST/tests
 
 
 # =============================================================================
@@ -135,7 +153,7 @@ build CMakeFiles/ASearch.dir/random_until.cpp.o: CXX_COMPILER__ASearch_unscanned
 #############################################
 # Link the executable ASearch
 
-build ASearch: CXX_EXECUTABLE_LINKER__ASearch_Debug CMakeFiles/ASearch.dir/main.cpp.o CMakeFiles/ASearch.dir/includes/structures.cpp.o CMakeFiles/ASearch.dir/includes/reading.cpp.o CMakeFiles/ASearch.dir/generate/generate_graphs.cpp.o CMakeFiles/ASearch.dir/a_search.cpp.o CMakeFiles/ASearch.dir/ALGO/dijkstra.cpp.o CMakeFiles/ASearch.dir/ALGO/asearch.cpp.o CMakeFiles/ASearch.dir/includes/writing.cpp.o CMakeFiles/ASearch.dir/TEST/tests/a_search_test.cpp.o CMakeFiles/ASearch.dir/TEST/efficiency/a_search_efficiency.cpp.o CMakeFiles/ASearch.dir/TEST/efficiency/test_efficiency.cpp.o CMakeFiles/ASearch.dir/LANDMARKS/landmarks.cpp.o CMakeFiles/ASearch.dir/random_until.cpp.o
+build ASearch: CXX_EXECUTABLE_LINKER__ASearch_Debug CMakeFiles/ASearch.dir/main.cpp.o CMakeFiles/ASearch.dir/includes/structures.cpp.o CMakeFiles/ASearch.dir/includes/reading.cpp.o CMakeFiles/ASearch.dir/generate/generate_graphs.cpp.o CMakeFiles/ASearch.dir/a_search.cpp.o CMakeFiles/ASearch.dir/ALGO/dijkstra.cpp.o CMakeFiles/ASearch.dir/ALGO/asearch.cpp.o CMakeFiles/ASearch.dir/includes/writing.cpp.o CMakeFiles/ASearch.dir/TEST/tests/a_search_test.cpp.o CMakeFiles/ASearch.dir/TEST/efficiency/a_search_efficiency.cpp.o CMakeFiles/ASearch.dir/TEST/efficiency/test_efficiency.cpp.o CMakeFiles/ASearch.dir/LANDMARKS/landmarks.cpp.o CMakeFiles/ASearch.dir/setting.cpp.o CMakeFiles/ASearch.dir/TEST/efficiency/dijkstra_efficiency.cpp.o CMakeFiles/ASearch.dir/LANDMARKS/test_efficiency_landmarks.cpp.o CMakeFiles/ASearch.dir/TEST/tests/testin_all_algorithm.cpp.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6
   OBJECT_DIR = CMakeFiles/ASearch.dir
   POST_BUILD = :

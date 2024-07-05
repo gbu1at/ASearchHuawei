@@ -10,7 +10,7 @@
 
 // Генерирует рандомный граф на n вершинах, m ребрах и с максимальным диапазоном ребер до max_weight
 CH::Graph
-generate_random_graph(CH::vertex_t n_vertices, size_t m_edges, CH::weight_t max_weight = RandomUtil::PROJECT_RND());
+generate_random_graph(CH::vertex_t n_vertices, size_t m_edges, CH::weight_t max_weight = Setting::PROJECT_RND());
 
 void generate_random_graph(CH::vertex_t n_vertices, size_t m_edges, CH::weight_t max_weight, std::ofstream &out);
 
