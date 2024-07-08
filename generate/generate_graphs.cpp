@@ -6,6 +6,7 @@
 #include <random>
 #include <set>
 #include <cassert>
+#include <iostream>
 
 CH::Graph generate_random_graph(CH::vertex_t n_vertices, size_t m_edges,
                                 CH::weight_t max_weight) {
@@ -30,6 +31,8 @@ CH::Graph generate_random_graph(CH::vertex_t n_vertices, size_t m_edges,
             break;
         } while (true);
     }
+
+    std::cout << "random graph created\n";
 
     return graph;
 }

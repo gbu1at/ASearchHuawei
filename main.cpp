@@ -4,41 +4,87 @@
 #include "TEST/tests/a_search_test.h"
 #include "setting.h"
 #include "LANDMARKS/test_efficiency_landmarks.h"
+#include "includes/reading.h"
+#include "includes/writing.h"
+
+
+#include <iostream>
+#include <fstream>
+
+
 
 int main() {
-    test_simple_dijkstra();
+//    test_simple_dijkstra();
+//
+//
+//    int cnt_landmark = 10;
+
+//    std::ofstream out;
+//    out.open("2e4-4e6-1e4 rnd.txt");
+//
+////    out << 1 << "\n";
+//    CH::Graph graph = generate_random_graph(20000, 4000000, 10000);
+//
+//    writing_graph(graph, out);
+//    out.close();
 
 
-//    for (int i = 0; i < 5; ++i) {
-//        Setting::initializeSeed(i);
-//        test_random_graph_efficiency();
-//        std::cout << "OK " << i << "\n";
-//    }
+//    CH::Graph graph = generate_random_graph(200000, 1000000, 10000);
+//    std::cout << "generate graph\n";
 
-    Setting::initializeSeed(time(nullptr));
-    Setting::set_debug(false);
 
+
+    std::ifstream in("2e5-2e6-1e5 rnd.txt");
+
+    CH::Graph graph = reading_graph(in);
+
+    Setting::initializeSeed(9454359);
+
+
+    int tests = 200;
+
+    std::vector<std::pair<CH::vertex_t , CH::vertex_t>> pair_start_finish(tests);
+
+    for (int i = 0; i < tests; ++i) {
+        CH::vertex_t start = Setting::PROJECT_RND() % graph.n;
+        CH::vertex_t finish = Setting::PROJECT_RND() % graph.n;
+
+        pair_start_finish[i] = {start, finish};
+    }
+//
+//    std::cout << "start\n";
     int cnt_landmark = 16;
-    int tests = 1;
+//
+//    CH::AlgorithmEfficiency E_a_r_lm = a_search_landmarks_average_efficiency_random_lm(pair_start_finish, graph, cnt_landmark);
+//    E_a_r_lm.print();
+//
+//
+//    std::cout << "-------------------------------------------------\n";
+//
+    CH::AlgorithmEfficiency E_a_s_lm = a_search_landmarks_average_efficiency_smart_lm(pair_start_finish, graph, cnt_landmark);
+    E_a_s_lm.print();
+//
+//    std::cout << "-------------------------------------------------\n";
+//
+//    CH::AlgorithmEfficiency E_b_a_r_lm = a_search_landmarks_average_efficiency_random_lm(pair_start_finish, graph, cnt_landmark, true);
+//    E_b_a_r_lm.print();
+//
+//    std::cout << "-------------------------------------------------\n";
+//
+//    CH::AlgorithmEfficiency E_b_a_s_lm = a_search_landmarks_average_efficiency_smart_lm(pair_start_finish, graph, cnt_landmark, true);
+//    E_b_a_s_lm.print();
+//
+//    std::cout << "-------------------------------------------------\n";
+//
+//    CH::AlgorithmEfficiency E_d = dijkstra_average_efficiency(pair_start_finish, graph);
+//    E_d.print();
+//    std::cout << "-------------------------------------------------\n";
+//
+//
+//    CH::AlgorithmEfficiency E_b_d = dijkstra_average_efficiency(pair_start_finish, graph, true);
+//    E_b_d.print();
+//    std::cout << "-------------------------------------------------\n";
 
-    CH::Graph graph = generate_random_graph(10000, 50000, 20);
-
-    std::cout << "graph generate!\n";
-
-    CH::AlgorithmEfficiency E1 = a_search_landmarks_average_efficiency_smart_lm(tests, graph, cnt_landmark);
-    E1.print();
-
-//    CH::AlgorithmEfficiency E2 = a_search_landmarks_average_efficiency_smart_lm(tests, graph, cnt_landmark, true);
-    CH::AlgorithmEfficiency E3 = dijkstra_average_efficiency(tests, graph);
-//    CH::AlgorithmEfficiency E4 = dijkstra_average_efficiency(tests, graph, true);
-
-//    E2.print();
-    E3.print();
-//    E4.print();
-
-//    Setting::initializeSeed(6);
-//    test_random_graph_efficiency();
-////    test_random_graph_efficiency();
 
     return 0;
 }

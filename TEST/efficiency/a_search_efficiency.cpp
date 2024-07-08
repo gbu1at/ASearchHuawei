@@ -94,6 +94,7 @@ a_search_landmarks_efficiency(CH::vertex_t start, CH::vertex_t finish, const CH:
                               bool is_B_search) {
 
     CH::LandMarks lm_s = std::move(lm);
+    lm_s.set_finish(finish);
 
     std::function<CH::weight_t(CH::vertex_t)> get_dist_s = [&lm_s](CH::vertex_t v) {
         return lm_s.get_dist(v);
@@ -121,7 +122,7 @@ a_search_landmarks_efficiency(CH::vertex_t start, CH::vertex_t finish, const CH:
 
 
 CH::AlgorithmEfficiency
-a_search_landmarks_average_efficiency(int tests, const CH::Graph &graph, const CH::LandMarks &lm,
+a_search_landmarks_average_efficiency(const std::vector<std::pair<CH::vertex_t, CH::vertex_t>> & pair_start_finish, const CH::Graph &graph, const CH::LandMarks &lm,
                                       bool is_B_search) {
 
     double average_percent = 0;
@@ -129,9 +130,11 @@ a_search_landmarks_average_efficiency(int tests, const CH::Graph &graph, const C
     CH::weight_t result = 0;
     int cnt_move = 0;
     int cnt_edge_in_way = 0;
+
+    int tests = pair_start_finish.size();
+
     for (int _ = 0; _ < tests; ++_) {
-        CH::vertex_t start = Setting::PROJECT_RND() % graph.n;
-        CH::vertex_t finish = Setting::PROJECT_RND() % graph.n;
+        auto[start, finish] = pair_start_finish[_];
 
         CH::AlgorithmEfficiency E = a_search_landmarks_efficiency(start, finish, graph, lm, is_B_search);
         average_percent += E.percent;

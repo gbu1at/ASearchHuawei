@@ -26,7 +26,7 @@ int Setting::PROJECT_RND() {
 //    b = a;
 //    a = res;
 //    return res;
-    return Setting::rng();
+    return Setting::rng() >> 1;
 //    return Setting::rng() % (end - start)
 //    std::uniform_int_distribution<int> dist(start, end);
 //    return dist(rng);

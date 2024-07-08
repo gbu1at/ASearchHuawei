@@ -7,8 +7,9 @@
 
 #include "structures.h"
 #include <fstream>
+#include <iostream>
 
-CH::Graph reading(std::ifstream& in);
-
+CH::Graph reading_graph(std::istream& in = std::cin);
+void reading_grid_graph(std::istream& in = std::cin);
 
 #endif //ASEARCH_READING_H

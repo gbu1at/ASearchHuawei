@@ -8,9 +8,8 @@
 void writing_graph(const CH::Graph &graph, std::ostream &out) {
     out << graph.n << " " << graph.m << "\n";
     for (int v = 0; v < graph.vertices.size(); ++v) {
-        out << v << "\t:\t";
         for (const CH::Edge &edge : graph.vertices[v].adj)
-            out << edge.to << " (" << edge.weight << ")  , ";
+            out << v << " " <<  edge.to << " " << edge.weight << "\n";
         out << "\n";
     }
     out << "\n";

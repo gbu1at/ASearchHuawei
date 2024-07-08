@@ -25,16 +25,17 @@ CH::AlgorithmEfficiency dijkstra_efficiency(CH::vertex_t start, CH::vertex_t fin
     return E;
 }
 
-CH::AlgorithmEfficiency dijkstra_average_efficiency(int tests, const CH::Graph& graph, bool is_B_search) {
+CH::AlgorithmEfficiency dijkstra_average_efficiency(const std::vector<std::pair<CH::vertex_t, CH::vertex_t>> & pair_start_finish, const CH::Graph& graph, bool is_B_search) {
     double average_percent = 0;
     double average_time = 0;
     CH::weight_t result = 0;
     int cnt_move = 0;
     int cnt_edge_in_way = 0;
 
+    int tests = pair_start_finish.size();
+
     for (int _ = 0; _ < tests; ++_) {
-        CH::vertex_t start = Setting::PROJECT_RND() % graph.n;
-        CH::vertex_t finish = Setting::PROJECT_RND() % graph.n;
+        auto[start, finish] = pair_start_finish[_];
 
         CH::AlgorithmEfficiency E = dijkstra_efficiency(start, finish, graph, is_B_search);
         average_percent += E.percent;

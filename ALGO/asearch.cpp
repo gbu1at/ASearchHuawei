@@ -99,8 +99,10 @@ a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std::f
     if (cnt_edge_in_way_ != nullptr)
         *cnt_edge_in_way_ = cnt_edge_in_way;
 
-    if (Setting::is_debug())
-        assert(result == dijkstra_min_two_vertices(start, finish, graph));
+    if (Setting::is_debug()) {
+        CH::weight_t res = dijkstra_min_two_vertices(start, finish, graph);
+        assert(result == res);
+    }
 
     return result;
 }
@@ -180,10 +182,18 @@ B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std:
         (*mark_from_)[current_node] = true;
 
 
+        if (current_distance >= result)
+            break;
+
         mark[current_node] = true;
 
-        if ((*mark_to_)[current_node]) continue;
-
+        if ((*mark_to_)[current_node]) {
+            if (result > (*distances_from_)[current_node] + (*distances_to_)[current_node]) {
+                result = (*distances_from_)[current_node] + (*distances_to_)[current_node];
+                middle_vertex = current_node;
+            }
+            continue;
+        }
         count_viewed_vertex++;
 
         for (const CH::Edge &edge: graph.vertices[current_node].adj) {
@@ -203,9 +213,6 @@ B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std:
                 middle_vertex = edge.to;
             }
         }
-
-        if (current_distance >= result)
-            break;
     }
 
     int cnt_edge_in_way = 0;
@@ -237,8 +244,10 @@ B_a_search(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, std:
     if (cnt_edge_in_way_ != nullptr)
         *cnt_edge_in_way_ = cnt_edge_in_way;
 
-    if (Setting::is_debug())
-        assert(result == dijkstra_min_two_vertices(start, finish, graph));
+    if (Setting::is_debug()) {
+        CH::weight_t res = dijkstra_min_two_vertices(start, finish, graph);
+        assert(result == res);
+    }
 
     return result;
 }

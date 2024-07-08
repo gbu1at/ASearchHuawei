@@ -32,7 +32,7 @@ a_search_landmarks_efficiency(CH::vertex_t start, CH::vertex_t finish, const CH:
 
 
 CH::AlgorithmEfficiency
-a_search_landmarks_average_efficiency(int tests, const CH::Graph &graph, const CH::LandMarks &lm,
+a_search_landmarks_average_efficiency(const std::vector<std::pair<CH::vertex_t, CH::vertex_t>> & pair_start_finish, const CH::Graph &graph, const CH::LandMarks &lm,
                                       bool is_B_search = false);
 
 

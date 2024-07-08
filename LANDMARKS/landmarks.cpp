@@ -6,33 +6,34 @@
 #include <random>
 #include "../ALGO/dijkstra.h"
 #include <cassert>
-#include <deque>
+//#include <deque>
+#include <set>
 
 
-
-int generate_new_landmark(const CH::Graph &graph, const std::vector<CH::vertex_t>& landmarks) {
+CH::vertex_t generate_new_landmark(const CH::Graph &graph, const std::vector<CH::vertex_t>& landmarks) {
     std::vector<CH::weight_t> dist(graph.n, -1);
 
 
-    std::deque<std::pair<CH::weight_t, CH::vertex_t>> active_vertex;
+    std::set<std::pair<CH::weight_t, CH::vertex_t>> active_vertex;
 
     for (auto v : landmarks) {
         dist[v] = 0;
-        active_vertex.emplace_back(0, v);
+        active_vertex.insert({0, v});
     }
 
     while (!active_vertex.empty()) {
-        auto[d, v] = active_vertex.front();
-        active_vertex.pop_front();
+        auto[d, v] = *active_vertex.begin();
+        active_vertex.erase(active_vertex.begin());
 
         for (auto e : graph.vertices[v].adj) {
-            if (dist[e.to] == -1) {
-                dist[e.to] = dist[v] + 1;
-                active_vertex.emplace_back(dist[e.to], e.to);
+            if (dist[e.to] > dist[v] + e.weight) {
+                active_vertex.erase({dist[e.to], e.to});
+                dist[e.to] = dist[v] + e.weight;
+                active_vertex.insert({dist[e.to], e.to});
             }
         }
     }
-    int new_landmark = landmarks[0];
+    CH::vertex_t new_landmark = landmarks[0];
     for (int v = 0; v < graph.n; ++v)
         if (dist[v] > dist[new_landmark])
             new_landmark = v;
@@ -51,7 +52,9 @@ void CH::LandMarks::random_landmarks(size_t cnt_landmarks, const CH::Graph &grap
 
 void CH::LandMarks::smart_landmarks(size_t cnt_landmarks, const CH::Graph &graph) {
     this->init_landmarks(cnt_landmarks);
-    std::vector<CH::vertex_t > lm = {(CH::vertex_t)(Setting::PROJECT_RND() % graph.n)};
+    std::vector<CH::vertex_t > lm_ = {(CH::vertex_t)(Setting::PROJECT_RND() % graph.n)};
+    std::vector<CH::vertex_t > lm = {generate_new_landmark(graph, lm_)};
+
 
     for (int i = 1; i < cnt_landmarks; ++i)
         lm.push_back(generate_new_landmark(graph, lm));
