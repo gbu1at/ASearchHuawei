@@ -27,7 +27,7 @@ CH::vertex_t generate_new_landmark(const CH::Graph &graph, const std::vector<CH:
         active_vertex.erase(active_vertex.begin());
 
         for (auto e : graph.vertices[v].adj) {
-            if (dist[e.to] > dist[v] + e.weight) {
+            if (dist[e.to] == -1 || dist[e.to] > dist[v] + e.weight) {
                 active_vertex.erase({dist[e.to], e.to});
                 dist[e.to] = dist[v] + e.weight;
                 active_vertex.insert({dist[e.to], e.to});
@@ -56,6 +56,7 @@ void CH::LandMarks::smart_landmarks(size_t cnt_landmarks, const CH::Graph &graph
     std::vector<CH::vertex_t > lm_ = {(CH::vertex_t)(Setting::PROJECT_RND() % graph.n)};
     std::vector<CH::vertex_t > lm = {generate_new_landmark(graph, lm_)};
 
+    std::cout << lm[0] << "\t";
 
     for (int i = 1; i < cnt_landmarks; ++i) {
         CH::vertex_t v = generate_new_landmark(graph, lm);

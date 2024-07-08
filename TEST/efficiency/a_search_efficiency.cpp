@@ -80,6 +80,7 @@ a_search_manhattan_distance_average_efficiency(const std::vector<std::pair<CH::v
         E.comment = "B + a search + manhattan distance";
         E.name_algorithm = "B + a search";
     }
+    return E;
 }
 
 
