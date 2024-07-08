@@ -31,6 +31,7 @@ CH::AlgorithmEfficiency dijkstra_average_efficiency(const std::vector<std::pair<
     CH::weight_t result = 0;
     int cnt_move = 0;
     int cnt_edge_in_way = 0;
+    int N = 0;
 
     int tests = pair_start_finish.size();
 
@@ -38,18 +39,21 @@ CH::AlgorithmEfficiency dijkstra_average_efficiency(const std::vector<std::pair<
         auto[start, finish] = pair_start_finish[_];
 
         CH::AlgorithmEfficiency E = dijkstra_efficiency(start, finish, graph, is_B_search);
-        average_percent += E.percent;
-        average_time += E.time;
-        result += E.result;
-        cnt_move += E.cnt_move;
-        cnt_edge_in_way += E.cnt_edge_in_way;
+        if (E.result != std::numeric_limits<CH::weight_t>::max()) {
+            average_percent += E.percent;
+            average_time += E.time;
+            result += E.result;
+            cnt_move += E.cnt_move;
+            cnt_edge_in_way += E.cnt_edge_in_way;
+            N ++;
+        }
     }
     CH::AlgorithmEfficiency E;
-    E.percent = average_percent / tests;
-    E.time = average_time / tests;
-    E.result = result / tests;
-    E.cnt_move = cnt_move / tests;
-    E.cnt_edge_in_way = cnt_edge_in_way / tests;
+    E.percent = average_percent / N;
+    E.time = average_time / N;
+    E.result = result / N;
+    E.cnt_move = cnt_move / N;
+    E.cnt_edge_in_way = cnt_edge_in_way / N;
     if (!is_B_search) E.name_algorithm = "dijkstra";
     else E.name_algorithm = "B + dijkstra";
 

@@ -8,6 +8,7 @@
 #include <cassert>
 //#include <deque>
 #include <set>
+#include <iostream>
 
 
 CH::vertex_t generate_new_landmark(const CH::Graph &graph, const std::vector<CH::vertex_t>& landmarks) {
@@ -56,9 +57,15 @@ void CH::LandMarks::smart_landmarks(size_t cnt_landmarks, const CH::Graph &graph
     std::vector<CH::vertex_t > lm = {generate_new_landmark(graph, lm_)};
 
 
-    for (int i = 1; i < cnt_landmarks; ++i)
-        lm.push_back(generate_new_landmark(graph, lm));
+    for (int i = 1; i < cnt_landmarks; ++i) {
+        CH::vertex_t v = generate_new_landmark(graph, lm);
+        lm.push_back(v);
+        std::cout << v << "\t";
+    }
+    std::cout << "\n";
     landmarks = lm;
+
+    std::cout << "found smart lm\n";
 
     this->build_min_ways(graph);
 }
@@ -89,4 +96,5 @@ void CH::LandMarks::set_finish(CH::vertex_t finish) {
 void CH::LandMarks::build_min_ways(const CH::Graph& graph) {
     for (int lm = 0; lm < cnt_landmarks; ++lm)
         min_dist_for_landmarks[lm] = dijkstra_min_all_vertices(landmarks[lm], graph);
+    std::cout << "builded min ways\n";
 }

@@ -15,7 +15,6 @@ CH::AlgorithmEfficiency a_search_efficiency(CH::vertex_t start, CH::vertex_t fin
 
     E.result = a_search(start, finish, graph, p, &E.percent, nullptr, &E.cnt_move, &E.cnt_edge_in_way);
 
-
     E.name_algorithm = "a_search";
 
     clock_t time_finish = clock();
@@ -41,6 +40,46 @@ CH::AlgorithmEfficiency B_a_search_efficiency(CH::vertex_t start, CH::vertex_t f
     E.time = (time_finish - time_start) / (double) CLOCKS_PER_SEC;
 
     return E;
+}
+
+CH::AlgorithmEfficiency
+a_search_manhattan_distance_average_efficiency(const std::vector<std::pair<CH::vertex_t, CH::vertex_t>> & pair_start_finish, const CH::GridGraph &graph,
+                                               bool is_B_search) {
+    double average_percent = 0;
+    double average_time = 0;
+    CH::weight_t result = 0;
+    int cnt_move = 0;
+    int cnt_edge_in_way = 0;
+    int N = 0;
+
+    int tests = pair_start_finish.size();
+
+    for (int _ = 0; _ < tests; ++_) {
+        auto[start, finish] = pair_start_finish[_];
+
+        CH::AlgorithmEfficiency E = a_search_manhattan_distance_efficiency(start, finish, graph, is_B_search);
+        if (E.result != std::numeric_limits<CH::weight_t>::max()) {
+            average_percent += E.percent;
+            average_time += E.time;
+            result += E.result;
+            cnt_move += E.cnt_move;
+            cnt_edge_in_way += E.cnt_edge_in_way;
+            N++;
+        }
+    }
+    CH::AlgorithmEfficiency E;
+    E.percent = average_percent / N;
+    E.time = average_time / N;
+    E.result = result / N;
+    E.cnt_move = cnt_move / N;
+    E.cnt_edge_in_way = cnt_edge_in_way / N;
+    if (!is_B_search) {
+        E.comment = "a search + manhattan distance";
+        E.name_algorithm = "a search";
+    } else {
+        E.comment = "B + a search + manhattan distance";
+        E.name_algorithm = "B + a search";
+    }
 }
 
 
@@ -130,6 +169,7 @@ a_search_landmarks_average_efficiency(const std::vector<std::pair<CH::vertex_t, 
     CH::weight_t result = 0;
     int cnt_move = 0;
     int cnt_edge_in_way = 0;
+    int N = 0;
 
     int tests = pair_start_finish.size();
 
@@ -137,18 +177,21 @@ a_search_landmarks_average_efficiency(const std::vector<std::pair<CH::vertex_t, 
         auto[start, finish] = pair_start_finish[_];
 
         CH::AlgorithmEfficiency E = a_search_landmarks_efficiency(start, finish, graph, lm, is_B_search);
-        average_percent += E.percent;
-        average_time += E.time;
-        result += E.result;
-        cnt_move += E.cnt_move;
-        cnt_edge_in_way += E.cnt_edge_in_way;
+        if (E.result != std::numeric_limits<CH::weight_t>::max()) {
+            average_percent += E.percent;
+            average_time += E.time;
+            result += E.result;
+            cnt_move += E.cnt_move;
+            cnt_edge_in_way += E.cnt_edge_in_way;
+            N++;
+        }
     }
     CH::AlgorithmEfficiency E;
-    E.percent = average_percent / tests;
-    E.time = average_time / tests;
-    E.result = result / tests;
-    E.cnt_move = cnt_move / tests;
-    E.cnt_edge_in_way = cnt_edge_in_way / tests;
+    E.percent = average_percent / N;
+    E.time = average_time / N;
+    E.result = result / N;
+    E.cnt_move = cnt_move / N;
+    E.cnt_edge_in_way = cnt_edge_in_way / N;
     if (!is_B_search) {
         E.comment = "a search + landmarks cnt: " + std::to_string(lm.cnt_landmarks);
         E.name_algorithm = "a search";

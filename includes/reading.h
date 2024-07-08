@@ -10,6 +10,6 @@
 #include <iostream>
 
 CH::Graph reading_graph(std::istream& in = std::cin);
-void reading_grid_graph(std::istream& in = std::cin);
+CH::GridGraph reading_grid_graph(std::istream& in = std::cin);
 
 #endif //ASEARCH_READING_H

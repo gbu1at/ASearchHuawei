@@ -17,7 +17,7 @@ CH::Graph reading_graph(std::istream &in) {
     return graph;
 }
 
-void reading_grid_graph(std::istream& in) {
+CH::GridGraph reading_grid_graph(std::istream& in) {
     int rows, cols;
     in >> rows >> cols;
 
@@ -34,4 +34,6 @@ void reading_grid_graph(std::istream& in) {
     }
 
     std::cout << "reading is worked!\n";
+
+    return graph;
 }
