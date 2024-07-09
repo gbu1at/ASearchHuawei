@@ -56,14 +56,14 @@ void CH::LandMarks::smart_landmarks(size_t cnt_landmarks, const CH::Graph &graph
     std::vector<CH::vertex_t > lm_ = {(CH::vertex_t)(Setting::PROJECT_RND() % graph.n)};
     std::vector<CH::vertex_t > lm = {generate_new_landmark(graph, lm_)};
 
-    std::cout << lm[0] << "\t";
+//    std::cout << lm[0] << "\t";
 
     for (int i = 1; i < cnt_landmarks; ++i) {
         CH::vertex_t v = generate_new_landmark(graph, lm);
         lm.push_back(v);
-        std::cout << v << "\t";
+//        std::cout << v << "\t";
     }
-    std::cout << "\n";
+//    std::cout << "\n";
     landmarks = lm;
 
     std::cout << "found smart lm\n";
