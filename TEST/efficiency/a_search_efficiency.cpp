@@ -13,7 +13,7 @@ CH::AlgorithmEfficiency a_search_efficiency(CH::vertex_t start, CH::vertex_t fin
 
     clock_t time_start = clock();
 
-    E.result = a_search(start, finish, graph, p, &E.percent, nullptr, &E.cnt_move, &E.cnt_edge_in_way);
+    E.result = ASearch::a_search(start, finish, p, &E.percent, nullptr, &E.cnt_move, &E.cnt_edge_in_way);
 
     E.name_algorithm = "a_search";
 
@@ -32,7 +32,8 @@ CH::AlgorithmEfficiency B_a_search_efficiency(CH::vertex_t start, CH::vertex_t f
 
     clock_t time_start = clock();
 
-    E.result = B_a_search(start, finish, graph, p_s, p_f, &E.percent, nullptr, &E.cnt_move, &E.cnt_edge_in_way);
+    E.result = BASearch::B_a_search(start, finish, p_s, p_f, &E.percent, nullptr, &E.cnt_move, &E.cnt_edge_in_way);
+
     E.name_algorithm = "B_a_search";
 
     clock_t time_finish = clock();
@@ -178,6 +179,7 @@ a_search_landmarks_average_efficiency(const std::vector<std::pair<CH::vertex_t, 
         auto[start, finish] = pair_start_finish[_];
 
         CH::AlgorithmEfficiency E = a_search_landmarks_efficiency(start, finish, graph, lm, is_B_search);
+//        E.print();
         if (E.result != std::numeric_limits<CH::weight_t>::max()) {
             average_percent += E.percent;
             average_time += E.time;

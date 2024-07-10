@@ -44,6 +44,7 @@ CH::vertex_t generate_new_landmark(const CH::Graph &graph, const std::vector<CH:
 void CH::LandMarks::random_landmarks(size_t cnt_landmarks, const CH::Graph &graph) {
     this->init_landmarks(cnt_landmarks);
 
+    landmarks.assign(graph.n, 0);
     std::iota(landmarks.begin(), landmarks.end(), 0);
     Setting::shuffle(landmarks.begin(), landmarks.end());
     landmarks.resize(cnt_landmarks);
@@ -78,7 +79,7 @@ CH::weight_t CH::LandMarks::get_dist(CH::vertex_t v) {
     auto result = std::numeric_limits<weight_t>::min();
     for (int lm = 0; lm < cnt_landmarks; ++lm)
         result = std::max(result, abs(min_dist_for_landmarks[lm][finish] -
-                                      min_dist_for_landmarks[lm][v]));
+                                              min_dist_for_landmarks[lm][v]));
     return result;
 }
 
@@ -95,7 +96,17 @@ void CH::LandMarks::set_finish(CH::vertex_t finish) {
 }
 
 void CH::LandMarks::build_min_ways(const CH::Graph& graph) {
-    for (int lm = 0; lm < cnt_landmarks; ++lm)
+//    int C = cnt_landmarks;
+//    far_lm_for_ver.assign(graph.n, std::vector<std::pair<CH::weight_t, CH::vertex_t>>(cnt_landmarks));
+    for (int lm = 0; lm < cnt_landmarks; ++lm) {
         min_dist_for_landmarks[lm] = dijkstra_min_all_vertices(landmarks[lm], graph);
+//        for (int v = 0; v < graph.n; ++v)
+//            far_lm_for_ver[v][lm] = {min_dist_for_landmarks[lm][v], lm};
+    }
+//    for (int v = 0; v < graph.n; ++v) {
+//        std::sort(far_lm_for_ver[v].begin(), far_lm_for_ver[v].end());
+//        std::reverse(far_lm_for_ver[v].begin(), far_lm_for_ver[v].end());
+//        far_lm_for_ver[v].resize(C);
+//    }
     std::cout << "builded min ways\n";
 }

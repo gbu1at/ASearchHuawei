@@ -10,8 +10,6 @@ CH::Graph reading_graph(std::istream &in) {
     CH::Graph graph(n);
     for (int _ = 0; _ < m; ++_) {
         int v, u, w; in >> v >> u >> w;
-//        if (v == 28386 || u == 28386)
-//            std::cout << v << " " << u << " " << w << "\n";
         graph.add_edge(v, u, w);
     }
     std::cout << "reading is worked!\n";

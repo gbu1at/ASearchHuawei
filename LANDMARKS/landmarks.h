@@ -15,7 +15,7 @@ namespace CH {
         int finish = 0;
         std::vector<vertex_t> landmarks;
         std::vector<std::vector<weight_t>> min_dist_for_landmarks;
-
+//        std::vector<std::vector<std::pair<CH::weight_t, CH::vertex_t >>> far_lm_for_ver;
 
         LandMarks() {}
 

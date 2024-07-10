@@ -39,6 +39,7 @@ CH::AlgorithmEfficiency dijkstra_average_efficiency(const std::vector<std::pair<
         auto[start, finish] = pair_start_finish[_];
 
         CH::AlgorithmEfficiency E = dijkstra_efficiency(start, finish, graph, is_B_search);
+//        E.print();
         if (E.result != std::numeric_limits<CH::weight_t>::max()) {
             average_percent += E.percent;
             average_time += E.time;

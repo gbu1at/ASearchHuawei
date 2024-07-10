@@ -80,7 +80,7 @@ namespace CH {
         std::string comment;
         void print() const;
     };
-
+//    CH::weight_t INF_WEIGHT;
 //    struct ASearchAlgorithmEfficiency : AlgorithmEfficiency {
 //        AlgorithmEfficiency() : AlgorithmEfficiency() {
 //            name_algorithm = "":

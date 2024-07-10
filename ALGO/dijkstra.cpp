@@ -16,7 +16,7 @@ std::vector<CH::weight_t> dijkstra_min_all_vertices(CH::vertex_t start, const CH
 
     active_vertices.insert({0, start});
 
-
+//    int time1 = clock();
     while (!active_vertices.empty()) {
         CH::weight_t current_distance = active_vertices.begin()->first;
         CH::vertex_t current_node = active_vertices.begin()->second;
@@ -32,12 +32,16 @@ std::vector<CH::weight_t> dijkstra_min_all_vertices(CH::vertex_t start, const CH
             }
         }
     }
+//    int time2 = clock();
+//
+//    std::cout << (time2 - time1) / (double) CLOCKS_PER_SEC << "\n";
     return distances;
 }
 
 CH::weight_t
 dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, double *percent,
                           int *cnt_move, int *cnt_edge_in_way_) {
+
     std::vector<CH::weight_t> distances(graph.n, std::numeric_limits<CH::weight_t>::max());
     distances[start] = 0;
 
@@ -54,6 +58,7 @@ dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Gra
 
     CH::weight_t result = std::numeric_limits<CH::weight_t>::max();
 
+//    int time1 = clock();
     while (!active_vertices.empty()) {
         //------------------------------------------------------------------------------------------------
         count_viewed_vertex++;
@@ -84,6 +89,9 @@ dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Gra
             }
         }
     }
+//    int time2 = clock();
+//
+//    std::cout << (time2 - time1) / (double) CLOCKS_PER_SEC << "\n";
 
     int cnt_edge_in_way = 0;
     if (result != std::numeric_limits<CH::weight_t>::max()) {
