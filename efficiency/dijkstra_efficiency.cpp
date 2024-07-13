@@ -3,18 +3,24 @@
 //
 
 #include "dijkstra_efficiency.h"
+#include "../ALGO/asearch.h"
 
 
 CH::AlgorithmEfficiency dijkstra_efficiency(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, bool is_B_search) {
     CH::AlgorithmEfficiency E;
 
     clock_t time_start = clock();
+//
+//    std::function<CH::weight_t(CH::vertex_t)> get_dist_f = [](CH::vertex_t v) {
+//        return 0;
+//    };
 
     if (!is_B_search) {
-        E.result = dijkstra_min_two_vertices(start, finish, graph, &E.percent, &E.cnt_move, &E.cnt_edge_in_way);
+        E.result = Dijkstra::dijkstra_min_two_vertices(start, finish, graph, &E.percent, &E.cnt_move, &E.cnt_edge_in_way);
         E.name_algorithm = "dijkstra";
     } else {
-        E.result = B_dijkstra_min_two_vertices(start, finish, graph, &E.percent, &E.cnt_move, &E.cnt_edge_in_way);
+        E.result = BDijkstra::B_dijkstra_min_two_vertices(start, finish, graph, &E.percent, &E.cnt_move, &E.cnt_edge_in_way);
+//        E.result = BASearch::B_a_search(start, finish, get_dist_f, get_dist_f, &E.percent, nullptr, &E.cnt_move, &E.cnt_edge_in_way);
         E.name_algorithm = "B_dijkstra";
     };
 

@@ -17,6 +17,12 @@ CH::Graph reading_graph(std::istream &in) {
     return graph;
 }
 
+CH::Graph reading_graph(std::string path) {
+    std::ifstream in;
+    in.open(path);
+    return reading_graph(in);
+}
+
 CH::GridGraph reading_grid_graph(std::istream& in) {
     int rows, cols;
     in >> rows >> cols;

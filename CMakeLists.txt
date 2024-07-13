@@ -19,17 +19,17 @@ add_executable(ASearch main.cpp
         includes/writing.h
         includes/writing.cpp
         TEST/tests/a_search_test.cpp
-        TEST/efficiency/a_search_efficiency.h
-        TEST/efficiency/a_search_efficiency.cpp
-        TEST/efficiency/test_efficiency.h
-        TEST/efficiency/test_efficiency.cpp
+        efficiency/a_search_efficiency.h
+        efficiency/a_search_efficiency.cpp
+        efficiency/test_efficiency.h
+        efficiency/test_efficiency.cpp
         LANDMARKS/landmarks.h
         LANDMARKS/landmarks.cpp
         setting.h
         setting.cpp
-        TEST/efficiency/dijkstra_efficiency.h
-        TEST/efficiency/dijkstra_efficiency.cpp
-        LANDMARKS/test_efficiency_landmarks.h
-        LANDMARKS/test_efficiency_landmarks.cpp
+        efficiency/dijkstra_efficiency.h
+        efficiency/dijkstra_efficiency.cpp
+        LANDMARKS/efficiency_landmarks.h
+        LANDMARKS/efficiency_landmarks.cpp
         TEST/tests/testin_all_algorithm.cpp
 )

@@ -6,6 +6,20 @@
 #include <vector>
 #include <set>
 #include <iostream>
+#include <algorithm>
+#include <queue>
+#include <assert.h>
+
+std::vector<std::pair<CH::weight_t, int>> Dijkstra::distances;
+std::vector<std::pair<size_t, int>> Dijkstra::min_way;
+int Dijkstra::T;
+
+void Dijkstra::init(const CH::Graph &graph) {
+    Dijkstra::T = 0;
+    Dijkstra::distances.assign(graph.n, {INF_WEIGHT, T});
+    Dijkstra::min_way.assign(graph.n, {-1, T});
+}
+
 
 std::vector<CH::weight_t> dijkstra_min_all_vertices(CH::vertex_t start, const CH::Graph &graph) {
     std::vector<CH::weight_t> distances(graph.n, std::numeric_limits<CH::weight_t>::max());
@@ -39,11 +53,12 @@ std::vector<CH::weight_t> dijkstra_min_all_vertices(CH::vertex_t start, const CH
 }
 
 CH::weight_t
-dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, double *percent,
-                          int *cnt_move, int *cnt_edge_in_way_) {
+Dijkstra::dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, double *percent,
+                                    int *cnt_move, int *cnt_edge_in_way_, std::vector<CH::vertex_t>* vertex_min_way) {
 
-    std::vector<CH::weight_t> distances(graph.n, std::numeric_limits<CH::weight_t>::max());
-    distances[start] = 0;
+    Dijkstra::T++;
+//    std::vector<CH::weight_t> distances(graph.n, std::numeric_limits<CH::weight_t>::max());
+    Dijkstra::distances[start] = {0, Dijkstra::T};
 
 
     std::set<std::pair<CH::weight_t, CH::vertex_t>> active_vertices;
@@ -52,8 +67,7 @@ dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Gra
 
 
     int count_viewed_vertex = 0;
-    std::vector<size_t> min_way(graph.n, -1);
-    min_way[start] = start;
+    Dijkstra::min_way[start] = {start, Dijkstra::T};
 
 
     CH::weight_t result = std::numeric_limits<CH::weight_t>::max();
@@ -69,7 +83,7 @@ dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Gra
         CH::vertex_t current_node = active_vertices.begin()->second;
 
         if (current_node == finish) {
-            result = distances[current_node];
+            result = Dijkstra::distances[current_node].first;
             break;
         }
 
@@ -78,13 +92,16 @@ dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Gra
         for (const CH::Edge &edge: graph.vertices[current_node].adj) {
             CH::weight_t new_distance = current_distance + edge.weight;
 
-            if (new_distance < distances[edge.to]) {
-                active_vertices.erase({distances[edge.to], edge.to});
-                distances[edge.to] = new_distance;
+            if (Dijkstra::distances[edge.to].second != Dijkstra::T)
+                Dijkstra::distances[edge.to] = {INF_WEIGHT, Dijkstra::T};
+
+            if (new_distance < Dijkstra::distances[edge.to].first) {
+                active_vertices.erase({Dijkstra::distances[edge.to].first, edge.to});
+                Dijkstra::distances[edge.to].first = new_distance;
                 active_vertices.insert({new_distance, edge.to});
 
                 //------------------------------------------------------------------------------------------------
-                min_way[edge.to] = current_node;
+                Dijkstra::min_way[edge.to] = {current_node, Dijkstra::T};
                 //------------------------------------------------------------------------------------------------
             }
         }
@@ -96,9 +113,11 @@ dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Gra
     int cnt_edge_in_way = 0;
     if (result != std::numeric_limits<CH::weight_t>::max()) {
         CH::vertex_t curr = finish;
+        if (vertex_min_way != nullptr) (*vertex_min_way).push_back(curr);
         while (curr != start) {
             cnt_edge_in_way++;
-            curr = min_way[curr];
+            curr = min_way[curr].first;
+            if (vertex_min_way != nullptr) (*vertex_min_way).push_back(curr);
         }
     }
 
@@ -117,92 +136,123 @@ dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Gra
     return result;
 }
 
+int BDijkstra::T;
+std::vector<std::pair<CH::weight_t, int>> BDijkstra::distances_start;
+std::vector<std::pair<CH::weight_t, int>> BDijkstra::distances_finish;
+std::vector<std::pair<bool, int>> BDijkstra::mark_from_start;
+std::vector<std::pair<bool, int>> BDijkstra::mark_from_finish;
+std::vector<std::pair<size_t, int>> BDijkstra::min_way_s;
+std::vector<std::pair<size_t, int>> BDijkstra::min_way_f;
+
+void BDijkstra::init(const CH::Graph &graph) {
+    BDijkstra::T = 0;
+    BDijkstra::distances_start.assign(graph.n, {INF_WEIGHT, T});
+    BDijkstra::distances_finish.assign(graph.n, {INF_WEIGHT, T});
+    BDijkstra::mark_from_start.assign(graph.n, {INF_WEIGHT, T});
+    BDijkstra::mark_from_finish.assign(graph.n, {INF_WEIGHT, T});
+    BDijkstra::min_way_s.assign(graph.n, {-1, T});
+    BDijkstra::min_way_f.assign(graph.n, {-1, T});
+}
+
 CH::weight_t
-B_dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, double *percent,
-                            int *cnt_move, int *cnt_edge_in_way_) {
-    std::vector<CH::weight_t> distances_start(graph.n, std::numeric_limits<CH::weight_t>::max());
-    distances_start[start] = 0;
-    std::vector<bool> mark_from_start(graph.n, false);
-    mark_from_start[start] = true;
+BDijkstra::B_dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::Graph &graph, double *percent,
+                                       int *cnt_move, int *cnt_edge_in_way_) {
+    BDijkstra::T++;
+    BDijkstra::distances_start[start] = {0, BDijkstra::T};
+    BDijkstra::mark_from_start[start] = {true, BDijkstra::T};
 
-    std::vector<CH::weight_t> distances_finish(graph.n, std::numeric_limits<CH::weight_t>::max());
-    distances_finish[finish] = 0;
-    std::vector<bool> mark_from_finish(graph.n, false);
-    mark_from_finish[finish] = true;
+    BDijkstra::distances_finish[finish] = {0, BDijkstra::T};
+    BDijkstra::mark_from_finish[finish] = {true, BDijkstra::T};
 
-    std::set<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_start;
-    std::set<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_finish;
+    std::priority_queue<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_start;
+    std::priority_queue<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_finish;
 
 
-    active_vertices_start.insert({0, start});
-    active_vertices_finish.insert({0, finish});
+    active_vertices_start.emplace(0, start);
+    active_vertices_finish.emplace(0, finish);
 
     size_t selector = 0;
 
 
     int count_viewed_vertex = 0;
-    std::vector<size_t> min_way_s(graph.n, -1), min_way_f(graph.n, -1);
-    min_way_s[start] = start;
-    min_way_f[finish] = finish;
+    BDijkstra::min_way_s[start] = {start, BDijkstra::T};
+    BDijkstra::min_way_f[finish] = {finish, BDijkstra::T};
 
-    CH::weight_t result = std::numeric_limits<CH::weight_t>::max();
+    CH::weight_t result = INF_WEIGHT;
     CH::vertex_t middle_vertex;
 
     while (!active_vertices_start.empty() && !active_vertices_finish.empty()) {
-        std::set<std::pair<CH::weight_t, CH::vertex_t>> *active_vertices = nullptr;
-        std::vector<CH::weight_t> *distances_from_ = nullptr;
-        std::vector<CH::weight_t> *distances_to_ = nullptr;
-        std::vector<bool> *mark_from_ = nullptr;
-        std::vector<bool> *mark_to_ = nullptr;
-        std::vector<size_t> *min_way_ = nullptr;
+        std::priority_queue<std::pair<CH::weight_t, CH::vertex_t>> *active_vertices = nullptr;
+        std::vector<std::pair<CH::weight_t, int>> *distances_from_ = nullptr;
+        std::vector<std::pair<CH::weight_t, int>> *distances_to_ = nullptr;
+        std::vector<std::pair<bool, int>> *mark_from_ = nullptr;
+        std::vector<std::pair<bool, int>> *mark_to_ = nullptr;
+        std::vector<std::pair<size_t, int>> *min_way_ = nullptr;
 
 
         if (selector == 0) {
             active_vertices = &active_vertices_start;
-            distances_from_ = &distances_start;
-            distances_to_ = &distances_finish;
-            mark_from_ = &mark_from_start;
-            mark_to_ = &mark_from_finish;
-            min_way_ = &min_way_s;
+            distances_from_ = &BDijkstra::distances_start;
+            distances_to_ = &BDijkstra::distances_finish;
+            mark_from_ = &BDijkstra::mark_from_start;
+            mark_to_ = &BDijkstra::mark_from_finish;
+            min_way_ = &BDijkstra::min_way_s;
 
         } else {
             active_vertices = &active_vertices_finish;
-            distances_from_ = &distances_finish;
-            distances_to_ = &distances_start;
-            mark_from_ = &mark_from_finish;
-            mark_to_ = &mark_from_start;
-            min_way_ = &min_way_f;
+            distances_from_ = &BDijkstra::distances_finish;
+            distances_to_ = &BDijkstra::distances_start;
+            mark_from_ = &BDijkstra::mark_from_finish;
+            mark_to_ = &BDijkstra::mark_from_start;
+            min_way_ = &BDijkstra::min_way_f;
         }
         selector = (selector + 1) % 2;
 
 
+        CH::weight_t current_distance = -active_vertices->top().first;
+        CH::vertex_t current_node = active_vertices->top().second;
+        active_vertices->pop();
 
-        CH::weight_t current_distance = active_vertices->begin()->first;
-        CH::vertex_t current_node = active_vertices->begin()->second;
-        active_vertices->erase(active_vertices->begin());
+        if (current_distance > (*distances_from_)[current_node].first) continue;
 
         count_viewed_vertex++;
 
-        (*mark_from_)[current_node] = true;
+
+        (*mark_from_)[current_node] = {true, BDijkstra::T};
 
         for (const CH::Edge &edge: graph.vertices[current_node].adj) {
             CH::weight_t new_distance = current_distance + edge.weight;
 
-            if (new_distance < (*distances_from_)[edge.to]) {
-                active_vertices->erase({(*distances_from_)[edge.to], edge.to});
-                (*distances_from_)[edge.to] = new_distance;
-                active_vertices->insert({new_distance, edge.to});
-                (*min_way_)[edge.to] = current_node;
+            if ((*distances_from_)[edge.to].second != BDijkstra::T)
+                (*distances_from_)[edge.to] = {INF_WEIGHT, BDijkstra::T};
+
+            if (new_distance < (*distances_from_)[edge.to].first) {
+//                active_vertices->erase({(*distances_from_)[edge.to].first, edge.to});
+                (*distances_from_)[edge.to].first = new_distance;
+                active_vertices->emplace(-new_distance, edge.to);
+                (*min_way_)[edge.to] = {current_node, BDijkstra::T};
             }
-            if ((*mark_to_)[edge.to] && result > (*distances_from_)[current_node] + edge.weight + (*distances_to_)[edge.to]) {
-                result = (*distances_from_)[current_node] + edge.weight + (*distances_to_)[edge.to];
+            if ((*mark_to_)[edge.to].second != BDijkstra::T)
+                (*mark_to_)[edge.to] = {false, BDijkstra::T};
+
+            if ((*mark_to_)[edge.to].first &&
+                result > (*distances_from_)[current_node].first + edge.weight + (*distances_to_)[edge.to].first) {
+                result = (*distances_from_)[current_node].first + edge.weight + (*distances_to_)[edge.to].first;
                 middle_vertex = edge.to;
             }
         }
 
-        if (mark_from_finish[current_node] && mark_from_start[current_node]) {
-            if (result > distances_start[current_node] + distances_finish[current_node]) {
-                result = distances_start[current_node] + distances_finish[current_node];
+        if (BDijkstra::mark_from_finish[current_node].second != BDijkstra::T)
+            BDijkstra::mark_from_finish[current_node] = {false, BDijkstra::T};
+
+        if (BDijkstra::mark_from_start[current_node].second != BDijkstra::T)
+            BDijkstra::mark_from_start[current_node] = {false, BDijkstra::T};
+
+        if (BDijkstra::mark_from_finish[current_node].first && BDijkstra::mark_from_start[current_node].first) {
+            if (result >
+                BDijkstra::distances_start[current_node].first + BDijkstra::distances_finish[current_node].first) {
+                result = BDijkstra::distances_start[current_node].first +
+                         BDijkstra::distances_finish[current_node].first;
                 middle_vertex = current_node;
             }
             break;
@@ -214,13 +264,13 @@ B_dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::G
         CH::vertex_t curr = middle_vertex;
         while (curr != start) {
             cnt_edge_in_way++;
-            curr = min_way_s[curr];
+            curr = BDijkstra::min_way_s[curr].first;
         }
 
         curr = middle_vertex;
         while (curr != finish) {
             cnt_edge_in_way++;
-            curr = min_way_f[curr];
+            curr = BDijkstra::min_way_f[curr].first;
         }
     }
 
@@ -234,6 +284,11 @@ B_dijkstra_min_two_vertices(CH::vertex_t start, CH::vertex_t finish, const CH::G
 
     if (cnt_edge_in_way_ != nullptr)
         *cnt_edge_in_way_ = cnt_edge_in_way;
+
+    if (Setting::is_debug()) {
+        CH::weight_t res = Dijkstra::dijkstra_min_two_vertices(start, finish, graph);
+        assert(res == result);
+    }
 
 
     return result;

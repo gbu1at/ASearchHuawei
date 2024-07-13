@@ -8,6 +8,8 @@
 #include <iostream>
 #include <cassert>
 #include "dijkstra.h"
+#include <queue>
+#include <map>
 
 const CH::Graph *ASearch::graph;
 std::vector<std::pair<CH::weight_t, int>> ASearch::distances;
@@ -28,11 +30,11 @@ void ASearch::init(const CH::Graph &g) {
 
 CH::weight_t
 ASearch::a_search(CH::vertex_t start, CH::vertex_t finish,
-                  std::function<CH::weight_t(CH::vertex_t)> p,
+                  const CH::LandMarks& lm,
                   double *percent, std::vector<bool> *mark_, int *cnt_move_, int *cnt_edge_in_way_) {
     int time1 = clock();
 
-    ASearch::k[start] = {p(start), ASearch::T};
+    ASearch::k[start] = {lm.get_dist(start, finish), ASearch::T};
 
     ASearch::T++;
 
@@ -82,7 +84,7 @@ ASearch::a_search(CH::vertex_t start, CH::vertex_t finish,
 
             ASearch::distances[edge.to].second = ASearch::T;
 
-            CH::weight_t new_k_distance = ASearch::distances[current_node].first + edge.weight + p(edge.to);
+            CH::weight_t new_k_distance = ASearch::distances[current_node].first + edge.weight + lm.get_dist(start, edge.to);
 
             if (ASearch::k[edge.to].second != ASearch::T)
                 ASearch::k[edge.to] = {INF_WEIGHT, ASearch::T};
@@ -101,7 +103,7 @@ ASearch::a_search(CH::vertex_t start, CH::vertex_t finish,
     }
 
     int time3 = clock();
-    std::cout << (time3 - time2) / (double) CLOCKS_PER_SEC << "\n";
+//    std::cout << (time3 - time2) / (double) CLOCKS_PER_SEC << "\n";
 
     int cnt_edge_in_way = 0;
     if (result != std::numeric_limits<CH::weight_t>::max()) {
@@ -132,12 +134,12 @@ ASearch::a_search(CH::vertex_t start, CH::vertex_t finish,
         *cnt_edge_in_way_ = cnt_edge_in_way;
 
     if (Setting::is_debug()) {
-        CH::weight_t res = dijkstra_min_two_vertices(start, finish, *graph);
+        CH::weight_t res = Dijkstra::dijkstra_min_two_vertices(start, finish, *graph);
         assert(result == res);
     }
 
     int time4 = clock();
-    std::cout << (time4 - time1) / (double) CLOCKS_PER_SEC << "\n";
+//    std::cout << (time4 - time1) / (double) CLOCKS_PER_SEC << "\n";
     return result;
 }
 
@@ -170,28 +172,25 @@ std::vector<std::pair<bool, int>> BASearch::mark;
 
 CH::weight_t
 BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
-                     std::function<CH::weight_t(CH::vertex_t)> p_s,
-                     std::function<CH::weight_t(CH::vertex_t)> p_f,
+                     const CH::LandMarks& lm,
                      double *percent, std::vector<bool> *mark_, int *cnt_move_, int *cnt_edge_in_way_) {
     int time1 = clock();
 
     BASearch::T++;
-    BASearch::k_s[start] = {p_s(start), BASearch::T};
+    BASearch::k_s[start] = {lm.get_dist(finish, start), BASearch::T};
     BASearch::distances_start[start] = {0, BASearch::T};
+//    BASearch::mark_from_start[start] = {true, BASearch::T};
 
-    BASearch::mark_from_start[start] = {true, BASearch::T};
-
-
-    BASearch::k_f[finish] = {p_f(finish), BASearch::T};
+    BASearch::k_f[finish] = {lm.get_dist(start, finish), BASearch::T};
     BASearch::distances_finish[finish] = {0, BASearch::T};
-    BASearch::mark_from_finish[finish] = {true, BASearch::T};
+//    BASearch::mark_from_finish[finish] = {true, BASearch::T};
 
-    std::set<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_start;
-    std::set<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_finish;
+    std::priority_queue<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_start;
+    std::priority_queue<std::pair<CH::weight_t, CH::vertex_t>> active_vertices_finish;
 
 
-    active_vertices_start.insert({BASearch::k_s[start].first, start});
-    active_vertices_finish.insert({BASearch::k_f[finish].first, finish});
+    active_vertices_start.emplace(-BASearch::k_s[start].first, start);
+    active_vertices_finish.emplace(-BASearch::k_f[finish].first, finish);
 
     size_t selector = 0;
 
@@ -204,14 +203,14 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
 
     int time2 = clock();
     while (!active_vertices_start.empty() && !active_vertices_finish.empty()) {
-        std::set<std::pair<CH::weight_t, CH::vertex_t>> *active_vertices = nullptr;
+        std::priority_queue<std::pair<CH::weight_t, CH::vertex_t>> *active_vertices = nullptr;
         std::vector<std::pair<CH::weight_t, int>> *k = nullptr;
-        std::function<CH::weight_t(CH::vertex_t)> *p = nullptr;
         std::vector<std::pair<CH::weight_t, int>> *distances_from_ = nullptr;
         std::vector<std::pair<CH::weight_t, int>> *distances_to_ = nullptr;
         std::vector<std::pair<bool, int>> *mark_from_ = nullptr;
         std::vector<std::pair<bool, int>> *mark_to_ = nullptr;
         std::vector<std::pair<int, int>> *min_way_ = nullptr;
+        CH::vertex_t target;
 
         if (selector == 0) {
             active_vertices = &active_vertices_start;
@@ -220,8 +219,8 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
             mark_from_ = &BASearch::mark_from_start;
             mark_to_ = &BASearch::mark_from_finish;
             k = &BASearch::k_s;
-            p = &p_s;
             min_way_ = &BASearch::min_way_s;
+            target = finish;
         } else {
             active_vertices = &active_vertices_finish;
             distances_from_ = &BASearch::distances_finish;
@@ -229,21 +228,29 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
             mark_from_ = &BASearch::mark_from_finish;
             mark_to_ = &BASearch::mark_from_start;
             k = &BASearch::k_f;
-            p = &p_f;
             min_way_ = &BASearch::min_way_f;
+            target = start;
         }
         selector = (selector + 1) % 2;
 
-        CH::weight_t current_distance = active_vertices->begin()->first;
-        CH::vertex_t current_node = active_vertices->begin()->second;
-        active_vertices->erase(active_vertices->begin());
+        CH::weight_t current_distance = -active_vertices->top().first;
+        CH::vertex_t current_node = active_vertices->top().second;
+        active_vertices->pop();
+        if ((*mark_from_)[current_node].second == BASearch::T && (*mark_from_)[current_node].first)
+            continue;
+
         (*mark_from_)[current_node] = {true, BASearch::T};
 
 
-        if (current_distance >= result)
+        if (current_distance >= result) {
+
+//            std::cout << current_distance << " " << result << " " << current_node << "\n";
             break;
+        }
 
         BASearch::mark[current_node] = {true, BASearch::T};
+
+
 
         if ((*mark_to_)[current_node].second != BASearch::T)
             (*mark_to_)[current_node] = {false, BASearch::T};
@@ -259,7 +266,7 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
         count_viewed_vertex++;
 
         for (const CH::Edge &edge: BASearch::graph->vertices[current_node].adj) {
-            CH::weight_t new_distance = (*distances_from_)[current_node].first + edge.weight + (*p)(edge.to);
+            CH::weight_t new_distance = (*distances_from_)[current_node].first + edge.weight + lm.get_dist(edge.to, target);
 
             if ((*distances_from_)[edge.to].second != BASearch::T)
                 (*distances_from_)[edge.to] = {INF_WEIGHT, BASearch::T};
@@ -271,9 +278,8 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
                 (*k)[edge.to] = {INF_WEIGHT, BASearch::T};
 
             if (new_distance < (*k)[edge.to].first) {
-                active_vertices->erase({(*k)[edge.to].first, edge.to});
                 (*k)[edge.to].first = new_distance;
-                active_vertices->insert({new_distance, edge.to});
+                active_vertices->emplace(-new_distance, edge.to);
 
                 (*min_way_)[edge.to].first = current_node;
             }
@@ -290,7 +296,7 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
     }
     int time3 = clock();
 
-    std::cout << (time3 - time2) / (double) CLOCKS_PER_SEC << "\n";
+//    std::cout << (time3 - time2) / (double) CLOCKS_PER_SEC << "\n";
 
     int cnt_edge_in_way = 0;
     if (result != std::numeric_limits<CH::weight_t>::max()) {
@@ -325,12 +331,12 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
         *cnt_edge_in_way_ = cnt_edge_in_way;
 
     if (Setting::is_debug()) {
-        CH::weight_t res = dijkstra_min_two_vertices(start, finish, *graph);
+        CH::weight_t res = Dijkstra::dijkstra_min_two_vertices(start, finish, *graph);
         assert(result == res);
     }
 
     int time4 = clock();
 
-    std::cout << (time4 - time1) / (double) CLOCKS_PER_SEC << "\n";
+//    std::cout << (time4 - time1) / (double) CLOCKS_PER_SEC << "\n";
     return result;
 }

@@ -6,6 +6,7 @@
 #define ASEARCH_ASEARCH_H
 
 #include "../includes/structures.h"
+#include "../LANDMARKS/landmarks.h"
 
 /*
     a search между двумя вергинами в графе
@@ -20,7 +21,7 @@ struct ASearch {
 
     static const CH::Graph *graph;
 
-    static CH::weight_t a_search(CH::vertex_t start, CH::vertex_t finish, std::function<CH::weight_t(CH::vertex_t)> p,
+    static CH::weight_t a_search(CH::vertex_t start, CH::vertex_t finish, const CH::LandMarks& lm,
                                  double *percent = nullptr, std::vector<bool> *mark_ = nullptr, int *cnt_move_ = nullptr,
                                  int *cnt_edge_in_way_ = nullptr);
 
@@ -40,8 +41,7 @@ struct BASearch {
 
     static CH::weight_t
     B_a_search(CH::vertex_t start, CH::vertex_t finish,
-               std::function<CH::weight_t(CH::vertex_t)> p_s,
-               std::function<CH::weight_t(CH::vertex_t)> p_f,
+               const CH::LandMarks& lm,
                double *percent = nullptr, std::vector<bool> *mark_ = nullptr, int *cnt_move_ = nullptr,
                int *cnt_edge_in_way_ = nullptr);
 
