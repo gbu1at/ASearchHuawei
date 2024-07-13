@@ -27,7 +27,7 @@ int main() {
 
     std::cout << graph.n << " " << graph.m << "\n";
 
-    int tests = 1;
+    int tests = 100;
 
     std::vector<std::pair<CH::vertex_t, CH::vertex_t> > start_finish_pair(tests);
 
@@ -39,14 +39,14 @@ int main() {
 
 //    start_finish_pair = {{2, 5}};
 
-    int landmarks = 20;
-    int active_landmarks = 20;
+    int landmarks = 100;
+    int active_landmarks = 2;
 
-//
-//    CH::AlgorithmEfficiency E_b_d = dijkstra_average_efficiency(start_finish_pair, graph, true);
-//    E_b_d.print();
-//    std::cout
-//            << "------------------------------------------------------------------------------------------------------------------------------------\n";
+
+    CH::AlgorithmEfficiency E_b_d = dijkstra_average_efficiency(start_finish_pair, graph, true);
+    E_b_d.print();
+    std::cout
+            << "------------------------------------------------------------------------------------------------------------------------------------\n";
 
 ////
 //    CH::AlgorithmEfficiency E_d = dijkstra_average_efficiency(start_finish_pair, graph);

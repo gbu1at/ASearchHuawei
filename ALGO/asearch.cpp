@@ -211,6 +211,8 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
         std::vector<std::pair<bool, int>> *mark_to_ = nullptr;
         std::vector<std::pair<int, int>> *min_way_ = nullptr;
         CH::vertex_t target;
+        CH::vertex_t source;
+
 
         if (selector == 0) {
             active_vertices = &active_vertices_start;
@@ -221,6 +223,7 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
             k = &BASearch::k_s;
             min_way_ = &BASearch::min_way_s;
             target = finish;
+            source = start;
         } else {
             active_vertices = &active_vertices_finish;
             distances_from_ = &BASearch::distances_finish;
@@ -230,6 +233,7 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
             k = &BASearch::k_f;
             min_way_ = &BASearch::min_way_f;
             target = start;
+            source = finish;
         }
         selector = (selector + 1) % 2;
 
@@ -260,13 +264,13 @@ BASearch::B_a_search(CH::vertex_t start, CH::vertex_t finish,
                 result = (*distances_from_)[current_node].first + (*distances_to_)[current_node].first;
                 middle_vertex = current_node;
             }
-            continue;
+            break;
         }
 
         count_viewed_vertex++;
 
         for (const CH::Edge &edge: BASearch::graph->vertices[current_node].adj) {
-            CH::weight_t new_distance = (*distances_from_)[current_node].first + edge.weight + lm.get_dist(edge.to, target);
+            CH::weight_t new_distance = (*distances_from_)[current_node].first + edge.weight + (lm.get_dist(edge.to, target) - lm.get_dist(edge.to, source)) / 2;
 
             if ((*distances_from_)[edge.to].second != BASearch::T)
                 (*distances_from_)[edge.to] = {INF_WEIGHT, BASearch::T};

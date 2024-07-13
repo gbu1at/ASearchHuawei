@@ -98,10 +98,11 @@ CH::weight_t CH::LandMarks::get_dist(CH::vertex_t v, CH::vertex_t u) const {
         if (x > result) {
             i = lm;
         }
+//        std::cout << lm << " " << x << "\n";
         result = std::max(result, x);
     }
 //    mp[i]++;
-    std::cout << "active right now\t" <<  i << "\n";
+//    std::cout << "active right now\t" <<  i << " " << result << "\n";
     return result;
 }
 
